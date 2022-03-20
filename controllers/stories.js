@@ -1,7 +1,5 @@
 let Story = require('../models/stories');
-
-const Schema = mongoose.Schema;
-
+/*
 exports.getAge = function (req, res) {
     let userData = req.body;
     if (userData == null)
@@ -51,3 +49,4 @@ exports.insert = function (req, res) {
         })
 
 }
+*/

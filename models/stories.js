@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const story = new Schema(
-    {
+const story = new Schema({
+
         title: {
             type: String,
             required: true,
@@ -21,10 +21,6 @@ const story = new Schema(
         description: {
             type: String,
             required: true
-        },
-
-        {
-        timestamps: true
-
-    }});
+        }
+    });
 
