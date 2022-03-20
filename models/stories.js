@@ -14,13 +14,10 @@ const story = new Schema({
             required: true,
             max: 100
         },
-        picture: {
-            type: String,
-            required: true
-        },
         description: {
             type: String,
             required: true
         }
     });
 
+module.exports = mongoose.model('Story', story);

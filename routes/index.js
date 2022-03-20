@@ -7,9 +7,13 @@ var initDB = require('../controllers/init');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Image Browsing' });
+  res.render('home', { title: 'Image Browsing' });
 });
 
+/* GET home page. */
+router.get('/createStory', function(req, res, next) {
+  res.render('index', { title: 'Image Browsing' });
+});
 /* GET home page.
 router
     .get('/insert', function(req, res, next) {
