@@ -4,19 +4,21 @@ const Schema = mongoose.Schema;
 
 const story = new Schema({
 
-        title: {
-            type: String,
-            required: true,
-            max: 100
-        },
         author: {
             type: String,
             required: true,
-            max: 100
+            max: 15
+        },
+        title: {
+            type: String,
+            required: true
         },
         description: {
             type: String,
             required: true
+        },
+        imageUrl: {
+            type: String
         }
     });
 

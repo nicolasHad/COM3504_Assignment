@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 const Story = require('../models/stories');
 
-exports.init= function() {
+
+
+exports.init = function() {
 
     let story = new Story({
-        title: 'Garbanzo',
         author: 'Bean',
-        description: 'I love beans'
+        title: '1',
+        description: 'Hello',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg'
     });
-    // console.log('dob: '+character.dob);
+    // console.log('dob: '+character.dgob);
 
     story.save()
         .then ((results) => {
