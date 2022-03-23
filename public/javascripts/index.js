@@ -8,6 +8,7 @@ let socket=null;
  * it initialises the interface and the expected socket messages
  * plus the associated actions
  */
+
 function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
@@ -77,17 +78,9 @@ function hideLoginInterface(room, userId) {
     document.getElementById('in_room').innerHTML= ' '+room;
 }
 
-function onSubmit(url) {
-    var formArray= $("form").serializeArray();
-    var data={};
-    for (index in formArray){
-        data[formArray[index].name]= formArray[index].value;
-    }
-    // const data = JSON.stringify($(this).serializeArray());
-    sendAxiosQuery(url, data);
-    event.preventDefault();
-}
 
+// These two functions are used to get the data from the form and send it to the controller I think
+// I am not sure, I took them from the lab
 function sendAxiosQuery(url, data) {
     axios.post(url, data)
         .then((dataR) => {// no need to JSON parse the result, as we are using
@@ -97,4 +90,15 @@ function sendAxiosQuery(url, data) {
         .catch(function (response) {
             alert(response.toJSON());
         })
+}
+
+function onSubmit(url) {
+    var formArray= $("form").serializeArray();
+    var data={};
+    for (index in formArray){
+        data[formArray[index].name]= formArray[index].value;
+    }
+    // const data = JSON.stringify($(this).serializeArray());
+    sendAxiosQuery(url, data);
+    event.preventDefault();
 }

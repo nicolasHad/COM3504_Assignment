@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Story = require('../models/stories');
 
 
-
+// Just a function to hardcode some objects in the database
 exports.init = function() {
 
     let story = new Story({

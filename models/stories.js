@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+// Defines the object schema for the database
 const story = new Schema({
 
         author: {

@@ -4,12 +4,12 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <script src="/javascripts/index.js"></script>
     <script src="/controllers/stories.js"></script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
-<body onload="init()">
+<body>
     <h1>Create a story</h1>
-    <form onsubmit="onSubmit('/createStory')">
+    <form id = "xForm" onsubmit="onSubmit('/newStory')">
         <p><label for="name"> Your name </label>
             <input type="text" id="authorName" name="authorName">
             <input type="text" id="authorTitle" name="authorTitle">

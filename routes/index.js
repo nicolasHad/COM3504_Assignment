@@ -10,12 +10,12 @@ router.get('/', function(req, res, next) {
   res.render('home', { title: 'Image Browsing' });
 });
 
-/* GET home page. */
+/* GET generateRoom page, called index in this case . */
 router.get('/generateRoom', function(req, res, next) {
   res.render('index', { title: 'Image Browsing' });
 });
 
-/* GET newStory. */
+/* GET newStory page and POST to the function which addes a new story to the databse in controllers/stories.js. */
 router.get('/createStory', function(req, res, next) {
   res.render('newStory', { title: 'Create a story' });
 })

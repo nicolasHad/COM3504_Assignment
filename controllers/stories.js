@@ -1,5 +1,6 @@
 let Story = require('../models/stories');
 
+//This function gets the data inputted in the form and sends it to the database
 exports.newStory = function (req, res) {
     let userData = req.body;
     if (userData == null) {
