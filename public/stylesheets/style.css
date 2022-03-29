@@ -35,3 +35,7 @@ a {
     position:absolute; top:0px; left:0px;
     background-color: rgba(255,0,0,.1);
 }
+.center {
+    border: 5px solid #FFFF00;
+    text-align: center;
+}

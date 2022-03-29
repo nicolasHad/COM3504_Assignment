@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script src="/javascripts/index.js"></script>
+    <script src="/controllers/stories.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Create a story</h1>
+    <form id = "xForm" onsubmit="onSubmit('/newStory')">
+        <p><label for="name"> Your name </label>
+            <input type="text" id="authorName" name="authorName">
+            <input type="text" id="authorTitle" name="authorTitle">
+            <input type="text" id="authorDescription" name="authorDescription">
+            <input type="text" id="image_url" name="image_url">
+        </p>
+        <p><input type="submit" name="g" value="Submit" id="g"></p>
+
+    </form>
+
+<div id="results" style="margin-top:30px"></div>
+
+</body>
+</html>

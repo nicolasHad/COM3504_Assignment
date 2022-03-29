@@ -8,6 +8,7 @@ let socket=null;
  * it initialises the interface and the expected socket messages
  * plus the associated actions
  */
+
 function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
@@ -41,7 +42,7 @@ function sendChatText() {
  */
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
-    name = document.getElementById('name').value;
+    name = document.getElementById('firstname').value; // Bug fixed, elementId was wrong
     let imageUrl= document.getElementById('image_url').value;
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
@@ -77,3 +78,27 @@ function hideLoginInterface(room, userId) {
     document.getElementById('in_room').innerHTML= ' '+room;
 }
 
+
+// These two functions are used to get the data from the form and send it to the controller I think
+// I am not sure, I took them from the lab
+function sendAxiosQuery(url, data) {
+    axios.post(url, data)
+        .then((dataR) => {// no need to JSON parse the result, as we are using
+            // we need to JSON stringify the object
+            document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
+        })
+        .catch(function (response) {
+            alert(response.toJSON());
+        })
+}
+
+function onSubmit(url) {
+    var formArray= $("form").serializeArray();
+    var data={};
+    for (index in formArray){
+        data[formArray[index].name]= formArray[index].value;
+    }
+    // const data = JSON.stringify($(this).serializeArray());
+    sendAxiosQuery(url, data);
+    event.preventDefault();
+}
