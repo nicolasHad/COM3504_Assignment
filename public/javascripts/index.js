@@ -42,7 +42,7 @@ function sendChatText() {
  */
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
-    name = document.getElementById('firstname').value;
+    name = document.getElementById('firstname').value; // Bug fixed, elementId was wrong
     let imageUrl= document.getElementById('image_url').value;
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
