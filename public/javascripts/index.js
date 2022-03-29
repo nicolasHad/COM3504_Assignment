@@ -15,7 +15,7 @@ function init() {
     document.getElementById('chat_interface').style.display = 'none';
 
     //Here include the indexedDB init function(ONCE I implement it) if the browser supports idb(can be found in Week4.b -IndexedDB solution)
-    if (!('indexedFB' in window)){
+    if (!('indexedDB' in window)){
         console.log('This borwser doesn\'t support IndexedDB');
         return;
     }
