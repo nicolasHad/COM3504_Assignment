@@ -110,3 +110,25 @@ function onSubmit(url) {
     sendAxiosQuery(url, data);
     event.preventDefault();
 }
+
+
+// Create the annotations class.
+// We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
+class Annotation{
+    constructor(story, body) {
+        this.story=story;
+        this.body=body;
+        this.type = "annotation";
+    }
+}
+
+class Story{
+    constructor(author,title,description,imageURL) {
+        this.author=author;
+        this.title=title;
+        this.description = description;
+        this.imageURL = imageURL;
+        this.type='story';
+
+    }
+}
