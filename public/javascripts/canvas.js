@@ -37,6 +37,10 @@ function initCanvas(sckt, imageUrl) {
         if (e.type === 'mousemove') {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
+                // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
+                //var annot_object = Annotation(storyId,'test_body'); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+                //storeCachedData(annot_object); //Cache the annotation in indexedDB
+
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
             }

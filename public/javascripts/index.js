@@ -41,6 +41,9 @@ function generateRoom() {
  */
 function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
+    // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
+    //var annot_object = Annotation(storyId,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
+
     // @todo send the chat message
 }
 
@@ -112,7 +115,7 @@ function onSubmit(url) {
 }
 
 
-// Create the annotations class.
+// Create the annotations/story classes.(NOT SURE IF WE REALLY NEED THEM,IF NOT IGNORE)
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
 class Annotation{
     constructor(story, body) {
