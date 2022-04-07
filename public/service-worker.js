@@ -13,17 +13,15 @@
 // limitations under the License.
 
 let cache= null;
-let dataCacheName = 'weatherData-v1';
-let cacheName = 'weatherPWA-step-8-1';
+let dataCacheName = 'storiesData';
+let cacheName = 'stories';
 let filesToCache = [
     '/',
-    '/scripts/app.js',
-    '/styles/inline.css',
-    '/styles/bootstrap.css',
-    '/scripts/bootstrap.js',
-    '/scripts/jquery.min.js',
-    '/scripts/database.js',
-    '/scripts/idb/index.js',
+    './app.js',
+    '/stylesheets/style.css',
+    '/javascripts/index.js',
+    '/javascripts/canvas.js',
+    './databases/stories.js',
     '/favicon.ico'
 ];
 
@@ -44,7 +42,7 @@ self.addEventListener('install', function (e) {
 
 
 /**
- * activation of service worker: it removes all cashed files if necessary
+ * activation of service worker: it removes all cached files if necessary
  */
 self.addEventListener('activate', function (e) {
     console.log('[ServiceWorker] Activate');
