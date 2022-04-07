@@ -17,18 +17,14 @@ let dataCacheName = 'storiesData';
 let cacheName = 'stories';
 let filesToCache = [
     '/',
-    './app.js',
-    '/stylesheets/style.css',
-    '/javascripts/index.js',
-    '/javascripts/canvas.js',
-    './databases/stories.js',
-    '/favicon.ico'
+    'javascripts/app.js',
+    'javascripts/index.js',
 ];
 
 
 /**
  * installation event: it adds all the files to be cached
- */
+*/
 self.addEventListener('install', function (e) {
     console.log('[ServiceWorker] Install');
     e.waitUntil(
@@ -44,87 +40,25 @@ self.addEventListener('install', function (e) {
 /**
  * activation of service worker: it removes all cached files if necessary
  */
-self.addEventListener('activate', function (e) {
-    console.log('[ServiceWorker] Activate');
+/*
+self.addEventListener('install', e => {
+    console.log('Installed');
+
     e.waitUntil(
-        caches.keys().then(function (keyList) {
-            return Promise.all(keyList.map(function (key) {
-                if (key !== cacheName && key !== dataCacheName) {
-                    console.log('[ServiceWorker] Removing old cache', key);
-                    return caches.delete(key);
-                }
-            }));
-        })
+        caches
+            .open(cacheName)
+            .then(cache => {
+                console.log("Caching files");
+                cache.addAll(filesToCache);
+            })
+            .then(() =>self.skipWaiting())
     );
-    /*
-     * Fixes a corner case in which the app wasn't returning the latest data.
-     * You can reproduce the corner case by commenting out the line below and
-     * then doing the following steps: 1) load app for first time so that the
-     * initial New York City data is shown 2) press the refresh button on the
-     * app 3) go offline 4) reload the app. You expect to see the newer NYC
-     * data, but you actually see the initial data. This happens because the
-     * service worker is not yet activated. The code below essentially lets
-     * you activate the service worker faster.
-     */
-    return self.clients.claim();
+});
+*/
+
+
+self.addEventListener('activate', e => {
+    console.log('Activated');
 });
 
 
-/**
- * this is called every time a file is fetched. This is a middleware, i.e. this method is
- * called every time a page is fetched by the browser
- * there are two main branches:
- * /weather_data posts cities names to get data about the weather from the server. if offline, the fetch will fail and the
- *      control will be sent back to Ajax with an error - you will have to recover the situation
- *      from there (e.g. showing the cached data)
- * all the other pages are searched for in the cache. If not found, they are returned
- */
-self.addEventListener('fetch', function (e) {
-    console.log('[Service Worker] Fetch', e.request.url);
-    let dataUrl = '/weather_data';
-    //if the request is '/weather_data', post to the server - do nit try to cache it
-    if (e.request.url.indexOf(dataUrl) > -1) {
-        /*
-         * When the request URL contains dataUrl, the app is asking for fresh
-         * weather data. In this case, the service worker always goes to the
-         * network and then caches the response. This is called the "Cache then
-         * network" strategy:
-         * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
-         */
-        return fetch(e.request)
-            .then( (response) => {
-                // note: it the network is down, response will contain the error
-                // that will be passed to Ajax
-                return response;
-            })
-            .catch((error) => {
-                return error;
-            })
-    } else {
-        /*
-         * The app is asking for app shell files. In this scenario the app uses the
-         * "Cache, falling back to the network" offline strategy:
-         * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-         */
-        e.respondWith(
-            caches.match(e.request).then(function (response) {
-                return response
-                    || fetch(e.request)
-                        .then(function (response) {
-                            // note if network error happens, fetch does not return
-                            // an error. it just returns response not ok
-                            // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
-                            if (!response.ok ||  response.statusCode>299) {
-                                console.log("error: " + response.error());
-                            } else {
-                                cache.add(e.request.url);
-                                return response;
-                            }
-                        })
-                        .catch(function (err) {
-                            console.log("error: " + err);
-                        })
-            })
-        );
-    }
-});
