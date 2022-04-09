@@ -11,7 +11,7 @@ let color = 'red', thickness = 4;
  * @param sckt the open socket to register events on
  * @param imageUrl teh image url to download
  */
-function initCanvas(sckt, imageUrl) {
+async function initCanvas(sckt, imageUrl) {
     socket = sckt;
     let flag = false,
         prevX, prevY, currX, currY = 0;
@@ -22,7 +22,7 @@ function initCanvas(sckt, imageUrl) {
     img.src = imageUrl;
 
     // event on the canvas when the mouse is on it
-    canvas.on('mousemove mousedown mouseup mouseout', function (e) {
+    canvas.on('mousemove mousedown mouseup mouseout', async function (e) {
         prevX = currX;
         prevY = currY;
         currX = e.clientX - canvas.position().left;
@@ -37,9 +37,12 @@ function initCanvas(sckt, imageUrl) {
         if (e.type === 'mousemove') {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
+
                 // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
-                //var annot_object = Annotation(storyId,'test_body'); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
-                //storeCachedData(annot_object); //Cache the annotation in indexedDB
+                // Note: Story id is set to 1 for now for testing purposes.It will get adapated
+                // to be the id of the corresponding story the annotation is drawn on.
+                 const annot_object = new DrawnAnnotation(1, ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+                 await storeCachedData(annot_object); //Cache the annotation in indexedDB
 
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
@@ -61,6 +64,7 @@ function initCanvas(sckt, imageUrl) {
     // and then you call
     //     let ctx = canvas[0].getContext('2d');
     //     drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness)
+
 
     // this is called when the src of the image is loaded
     // this is an async operation as it may take time

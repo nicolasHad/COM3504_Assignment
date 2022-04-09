@@ -16,6 +16,8 @@ exports.newStory = function (req, res) {
     });
     console.log('received: ' + story);
 
+    //storeCachedData(story);
+
     story.save()
         .then ((results) => {
             console.log(results._id);

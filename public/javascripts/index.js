@@ -25,6 +25,44 @@ function init() {
     //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
 }
 
+
+/**
+ * Initial version:to be updated(Nicolas)
+ * given the list of previously visited stories for the user, it will retrieve all the STORIES data from
+ * the server (or failing that) from the indexedDB, and the annotations of each story from indexedDB
+ * @param forceReload true if the data is to be loaded from the server
+ */
+function loadData(forceReload){
+    var storyList=[];
+    //storyList=removeDuplicates(storyList);
+    retrieveAllStoriesData(storyList, new Date().getTime(), forceReload);
+}
+
+/**
+ * it cycles through the list of stories and requests the data from the server for each
+ * story
+ * @param cityList the list of the cities the user has requested
+ * @param date the date for the forecasts (not in use)
+ * @param forceReload true if the data is to be retrieved from the server
+ */
+function retrieveAllStoriesData(storyList, date, forceReload){
+    //refreshStoryList();
+    //for (let index in storyList)
+        //loadCityData(storyList[index], date, forceReload);
+}
+
+/**
+ * given one story, it queries the mongoDB to get the latest
+ * the story object
+ * if the request to the server fails, it shows the data stored in the indexedDB
+ * Meanwhile, the annotations for the story are retrieved directly from indexedDB
+ * @param storyID(?)
+ * @param forceReload true if the data is to be retrieved from the server
+ */
+async function loadStoryData(story,forceReload){
+    return null;
+}
+
 /**
  * called to generate a random room number
  * This is a simplification. A real world implementation would ask the server to generate a unique room number
@@ -39,10 +77,14 @@ function generateRoom() {
  * called when the Send button is pressed. It gets the text to send from the interface
  * and sends the message via  socket
  */
-function sendChatText() {
+async function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
+
     // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
-    //var annot_object = Annotation(storyId,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
+    // Note: Story id is set to 1 for now for testing purposes.It will get adapated
+    // to be the id of the corresponding story the annotation is drawn on.
+    const annot_object = new WrittenAnnotation(1,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
+    await storeCachedData(annot_object);
 
     // @todo send the chat message
 }
@@ -117,11 +159,26 @@ function onSubmit(url) {
 
 // Create the annotations/story classes.(NOT SURE IF WE REALLY NEED THEM,IF NOT IGNORE)
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
-class Annotation{
+class WrittenAnnotation{
     constructor(story, body) {
         this.story=story;
         this.body=body;
         this.type = "annotation";
+    }
+}
+
+class DrawnAnnotation{
+    constructor(story, ctx, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
+        this.story=story;
+        this.ctx=ctx;
+        this.canvas_width = canvas_width;
+        this.canvas_height = canvas_height;
+        this.prevX = prevX;
+        this.prevY = prevY;
+        this.currX = currX;
+        this.currY = currY;
+        this.color = color;
+        this.thickness = thickness;
     }
 }
 

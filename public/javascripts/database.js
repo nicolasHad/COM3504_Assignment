@@ -3,6 +3,41 @@
  *  To be completed
  */
 
+/**
+class DrawnAnnotation{
+    constructor(story, ctx, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
+        this.story=story;
+        this.ctx=ctx;
+        this.canvas_width = canvas_width;
+        this.canvas_height = canvas_height;
+        this.prevX = prevX;
+        this.prevY = prevY;
+        this.currX = currX;
+        this.currY = currY;
+        this.color = color;
+        this.thickness = thickness;
+    }
+}
+ class WrittenAnnotation{
+    constructor(story, body) {
+        this.story=story;
+        this.body=body;
+        this.type = "annotation";
+    }
+}
+
+ class Story{
+    constructor(author,title,description,imageURL) {
+        this.author=author;
+        this.title=title;
+        this.description = description;
+        this.imageURL = imageURL;
+        this.type='story';
+
+    }
+}
+ **/
+
 import * as idb from '/idb/index.js';
 
 let db;
@@ -41,7 +76,7 @@ async function initDatabase(){
                     annotationsDB.createIndex('story', 'story', {unique:false, multiEntry:true});
                 }
             },
-            // When it's not possible tp connect.
+            // When it's not possible to connect.
             blocked(){
             },
 
