@@ -34,8 +34,8 @@ function init() {
  */
 function loadData(forceReload){
     var storyList=[];
-    //storyList=removeDuplicates(storyList);
-    retrieveAllStoriesData(storyList, new Date().getTime(), forceReload);
+    storyList=removeDuplicates(storyList);
+    retrieveAllStoriesData(storyList, forceReload);
 }
 
 /**
@@ -45,7 +45,7 @@ function loadData(forceReload){
  * @param date the date for the forecasts (not in use)
  * @param forceReload true if the data is to be retrieved from the server
  */
-function retrieveAllStoriesData(storyList, date, forceReload){
+function retrieveAllStoriesData(storyList, forceReload){
     //refreshStoryList();
     //for (let index in storyList)
         //loadCityData(storyList[index], date, forceReload);
@@ -61,6 +61,35 @@ function retrieveAllStoriesData(storyList, date, forceReload){
  */
 async function loadStoryData(story,forceReload){
     return null;
+}
+
+/**
+ * it enables selecting a story from the stories menu.
+ * it saves the selected story in the database so that it can be retrieved next time
+ * @param story
+ * @param date
+ */
+function selectStory(story) {
+    var storyList=JSON.parse(localStorage.getItem('stories'));
+    if (storyList==null) storyList=[];
+    storyList.push(story);
+    storyList = removeDuplicates(storyList);
+    localStorage.setItem('storyList', JSON.stringify(storyList));
+    retrieveAllStoriesData(storyList, true);
+}
+
+/**
+ * Given a list of stories, it removes any duplicates
+ * @param storyList
+ * @returns {Array}
+ */
+function removeDuplicates(storyList) {
+    // remove any duplicate
+    var uniqueNames=[];
+    $.each(storyList, function(i, el){
+        if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+    });
+    return uniqueNames;
 }
 
 /**
@@ -83,8 +112,8 @@ async function sendChatText() {
     // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
     // Note: Story id is set to 1 for now for testing purposes.It will get adapated
     // to be the id of the corresponding story the annotation is drawn on.
-    const annot_object = new WrittenAnnotation(1,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
-    await storeCachedData(annot_object);
+    //const annot_object = new WrittenAnnotation(1,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
+    //await storeCachedData(annot_object);
 
     // @todo send the chat message
 }
