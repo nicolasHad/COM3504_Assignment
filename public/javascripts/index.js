@@ -46,9 +46,17 @@ function loadData(forceReload){
  * @param forceReload true if the data is to be retrieved from the server
  */
 function retrieveAllStoriesData(storyList, forceReload){
-    //refreshStoryList();
-    //for (let index in storyList)
-        //loadCityData(storyList[index], date, forceReload);
+    refreshStoryList();
+    for (let index in storyList)
+        loadStoryData(storyList[index], forceReload);
+}
+
+/**
+ * it removes all forecasts from the result div
+ */
+function refreshStoryList(){
+    if (document.getElementById('results')!=null)
+        document.getElementById('results').innerHTML='';
 }
 
 /**
@@ -60,7 +68,20 @@ function retrieveAllStoriesData(storyList, forceReload){
  * @param forceReload true if the data is to be retrieved from the server
  */
 async function loadStoryData(story,forceReload){
+    let cachedData=await getCachedData(story);
+    if(!forceReload && cachedData && cachedData.length>0){
+        for (let res of cachedData) {
+            //addToResults(res);
+        }
+    }
+    else{
+        //here we need to index the mongoDB for the given story.
+    }
     return null;
+}
+
+async function loadAnnotationData(story,forceReload){
+    return 0;
 }
 
 /**
@@ -185,6 +206,15 @@ function onSubmit(url) {
     event.preventDefault();
 }
 
+function showOfflineWarning(){
+    if (document.getElementById('offline_div')!=null)
+        document.getElementById('offline_div').style.display='block';
+}
+
+function hideOfflineWarning(){
+    if (document.getElementById('offline_div')!=null)
+        document.getElementById('offline_div').style.display='none';
+}
 
 // Create the annotations/story classes.(NOT SURE IF WE REALLY NEED THEM,IF NOT IGNORE)
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).

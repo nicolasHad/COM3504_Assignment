@@ -127,29 +127,23 @@ window.storeCachedData = storeCachedData;
 
 // Initial version, need to redefine it to retrieve data for both stories and their annotations(as soon as I put stories in the same store as their stories.)
 // 2 ways  of doing this. I can either stick to using 2 different stores for stories and annotations(and every time a story is to be
-// retrieved using author,title as surrogate 'PK' I just retrieve the corresponding annotations as well.Second option is to store
+// retrieved using author,title as composite 'PK' I just retrieve the corresponding annotations as well.Second option is to store
 // stories and their annotations in the same store, and retrieve them altogether.
-async function getCachedData(author,title) {
+async function getCachedStoryData(author,title) {
     if (!db)
         await initDatabase();
     if (db) {
         try {
             console.log('fetching story. Title:' + title + '.Author:' + author);
             var store_stories = STORIES_STORE_NAME;
-            var store_annotations = ANNOTATIONS_STORE_NAME;
 
-            //Define different transcations,stores,indexes and readingLists for both stories and annotations.
+            //Define different transactions,stores,indexes and readingLists for both stories and annotations.
             let tx_stories = await db.transaction(store_stories,'readonly');
-            let tx_annotations = await db.transaction(store_annotations,'readonly');
             let story_store = await tx_stories.objectStore(store_stories);
-            let annotation_store = await tx_annotations.objectStore(store_annotations);
             let index_stories = await story_store.index('title'); // Maybe indexing a story just by title is not good, need to define a proper PK.
-            let index_annotations = await annotation_store.index('title'); // Assuming that title is story's PK, can change.
             let readingList_stories = await index_stories.getAll(IDBKeyRange.only(title));
-            let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only(title)); //Assuming that title is story's PK, can change.
 
             await tx_stories.complete;
-            await tx_annotations.complete;
 
             let finalResults=[];
             if(readingList_stories && readingList_stories.length>0){
@@ -159,17 +153,7 @@ async function getCachedData(author,title) {
                         max = elem;
                 if (max)
                     finalResults.push(max);
-            }
-            // Get the annotations as well.
-            if(readingList_annotations && readingList_annotations.length>0){
-                let max;
-                for (let elem of readingList_annotations)
-                    if(!max || elem.date>max.date)
-                        max = elem;
-                if (max)
-                    finalResults.push(max);
                 return finalResults;
-                console.log(finalResults);//for testing, remove later.
             }
             else{
                 const value=localStorage.getItem(title);
@@ -190,4 +174,86 @@ async function getCachedData(author,title) {
         return finalResults;
     }
 }
-window.getCachedData = getCachedData;
+window.getCachedStoryData = getCachedStoryData;
+
+async function getCachedAnnotationData(story){
+    if (!db)
+        await initDatabase();
+    if (db) {
+        try {
+            //console.log('fetching story. Title:' + title + '.Author:' + author);
+            var store_annotations = ANNOTATIONS_STORE_NAME;
+
+            //Define different transactions,stores,indexes and readingLists for both stories and annotations.
+            let tx_annotations = await db.transaction(store_annotations,'readonly');
+            let annotation_store = await tx_annotations.objectStore(store_annotations);
+            let index_annotations = await annotation_store.index('story');
+            let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only(story)); //Assuming that title is story's PK, can change.
+
+            await tx_annotations.complete;
+
+            let finalResults=[];
+            // Get the annotations as well.
+            if(readingList_annotations && readingList_annotations.length>0){
+                let max;
+                for (let elem of readingList_annotations)
+                    if(!max || elem.date>max.date)
+                        max = elem;
+                if (max)
+                    finalResults.push(max);
+                return finalResults;
+                console.log(finalResults);//for testing, remove later.
+            }
+            else{
+                const value=localStorage.getItem(story);
+                if(value==null)
+                    return finalResults;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    else {
+        const value = localStorage.getItem(author);
+        let finalResults = [];
+        if(value == null)
+            return finalResults;
+        else finalResults.push(value);
+        return finalResults;
+    }
+}
+window.getCachedAnnotationData = getCachedAnnotationData;
+
+
+/**
+ * Given the returned story data from mongoDB, it returns the value of
+ * the field author.
+ */
+function getAuthor(data) {
+    if(data.author == null && data.author === undefined){
+        return "unavailable";
+    }
+    return data.author;
+}
+
+function getTitle(data) {
+    if(data.title == null && data.title === undefined){
+        return "unavailable";
+    }
+    return data.title;
+}
+
+function getDescription(data) {
+    if(data.description == null && data.description === undefined){
+        return "unavailable";
+    }
+    return data.description;
+}
+
+function getImageURL(data) {
+    if(data.imageUrl == null && data.imageUrl === undefined){
+        return "unavailable";
+    }
+    return data.imageUrl;
+}
