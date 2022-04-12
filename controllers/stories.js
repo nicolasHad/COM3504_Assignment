@@ -28,3 +28,10 @@ exports.newStory = function (req, res) {
         })
 
 }
+
+/**exports.getStoryData=function (req,res) {
+    let userData = req.body;
+    if (userData == null) {
+        res.status(403).send('No data sent!')
+    }
+}*/

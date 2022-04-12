@@ -38,7 +38,7 @@ class DrawnAnnotation{
 }
  **/
 
-import * as idb from '/idb/index.js';
+import * as idb from './idb/index.js';
 
 let db;
 

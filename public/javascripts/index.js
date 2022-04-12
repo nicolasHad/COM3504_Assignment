@@ -2,6 +2,7 @@ let name = null;
 let roomNo = null;
 let socket=null;
 
+//let Story = require("../models/stories.js")
 
 /**
  * called by <body onload>
@@ -22,9 +23,10 @@ function init() {
         console.log('This browser doesn\'t support IndexedDB');
     }
 
+    //testDataLoad(false);
+
     //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
 }
-
 
 /**
  * Initial version:to be updated(Nicolas)
@@ -67,6 +69,8 @@ function refreshStoryList(){
  * @param storyID(?)
  * @param forceReload true if the data is to be retrieved from the server
  */
+//Maybe we can use promises here(try getting data from mongo, if request to mongoDB fails,
+// then go to indexedDB in the catch statement(?)
 async function loadStoryData(story,forceReload){
     let cachedData=await getCachedData(story);
     if(!forceReload && cachedData && cachedData.length>0){
@@ -76,6 +80,13 @@ async function loadStoryData(story,forceReload){
     }
     else{
         //here we need to index the mongoDB for the given story.
+        var query = Story.find({'title':story.title});
+        query.exec(function (err, result) {
+            //result is the returned story from the mongoDB.
+            if (err){
+                //do something in case of an error- Maybe here we can get the cached data.
+            }
+        })
     }
     return null;
 }
@@ -88,7 +99,6 @@ async function loadAnnotationData(story,forceReload){
  * it enables selecting a story from the stories menu.
  * it saves the selected story in the database so that it can be retrieved next time
  * @param story
- * @param date
  */
 function selectStory(story) {
     var storyList=JSON.parse(localStorage.getItem('stories'));
@@ -241,13 +251,3 @@ class DrawnAnnotation{
     }
 }
 
-class Story{
-    constructor(author,title,description,imageURL) {
-        this.author=author;
-        this.title=title;
-        this.description = description;
-        this.imageURL = imageURL;
-        this.type='story';
-
-    }
-}
