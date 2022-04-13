@@ -21,6 +21,14 @@ router.get('/createStory', function(req, res, next) {
 })
     .post('/newStory', story.newStory);
 
+
+router
+    .get('/home',function (req,res,next){
+      res.render('home');
+    })
+    .post('/home', story.getActiveStoryData);
+
+
 /* GET home page.
 router
     .get('/insert', function(req, res, next) {

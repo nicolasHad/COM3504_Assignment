@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="/javascripts/database.js" type="module"></script>
     <script src="/javascripts/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Stories</title>
 </head>
 <body>
@@ -18,6 +19,11 @@
 
 </div>
 
+<form id = "xForm" onsubmit="onSubmit2('/home')">
+    <p><input type="submit" name="g" value="Submit" id="g"></p>
+</form>
+
+<div id="results" style="margin-top:30px"></div>
 
 </body>
 </html>

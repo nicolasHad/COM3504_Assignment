@@ -2,8 +2,6 @@ let name = null;
 let roomNo = null;
 let socket=null;
 
-//let Story = require("../models/stories.js")
-
 /**
  * called by <body onload>
  * it initialises the interface and the expected socket messages
@@ -54,14 +52,6 @@ function retrieveAllStoriesData(storyList, forceReload){
 }
 
 /**
- * it removes all forecasts from the result div
- */
-function refreshStoryList(){
-    if (document.getElementById('results')!=null)
-        document.getElementById('results').innerHTML='';
-}
-
-/**
  * given one story, it queries the mongoDB to get the latest
  * the story object
  * if the request to the server fails, it shows the data stored in the indexedDB
@@ -79,14 +69,7 @@ async function loadStoryData(story,forceReload){
         }
     }
     else{
-        //here we need to index the mongoDB for the given story.
-        var query = Story.find({'title':story.title});
-        query.exec(function (err, result) {
-            //result is the returned story from the mongoDB.
-            if (err){
-                //do something in case of an error- Maybe here we can get the cached data.
-            }
-        })
+        //get to the server
     }
     return null;
 }
@@ -122,6 +105,15 @@ function removeDuplicates(storyList) {
     });
     return uniqueNames;
 }
+
+/**
+ * it removes all forecasts from the result div
+ */
+function refreshStoryList(){
+    if (document.getElementById('results')!=null)
+        document.getElementById('results').innerHTML='';
+}
+
 
 /**
  * called to generate a random room number
@@ -216,29 +208,19 @@ function onSubmit(url) {
     event.preventDefault();
 }
 
-function showOfflineWarning(){
-    if (document.getElementById('offline_div')!=null)
-        document.getElementById('offline_div').style.display='block';
-}
-
-function hideOfflineWarning(){
-    if (document.getElementById('offline_div')!=null)
-        document.getElementById('offline_div').style.display='none';
-}
-
 // Create the annotations/story classes.(NOT SURE IF WE REALLY NEED THEM,IF NOT IGNORE)
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
 class WrittenAnnotation{
-    constructor(story, body) {
-        this.story=story;
+    constructor(room, body) {
+        this.room=room;
         this.body=body;
         this.type = "annotation";
     }
 }
 
 class DrawnAnnotation{
-    constructor(story, ctx, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
-        this.story=story;
+    constructor(room, ctx, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
+        this.room=room;
         this.ctx=ctx;
         this.canvas_width = canvas_width;
         this.canvas_height = canvas_height;
@@ -249,5 +231,28 @@ class DrawnAnnotation{
         this.color = color;
         this.thickness = thickness;
     }
+}
+
+//TESTING METHODS//
+function sendAxiosQuery2(url, data) {
+    axios.post(url, data)
+        .then((dataR) => {// no need to JSON parse the result, as we are using
+            // we need to JSON stringify the object
+            document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
+            console.log('IN SENDAXIOSQUERY2');
+        })
+        .catch(function (response) {
+            alert(JSON.stringify(response));
+        })
+}
+
+function onSubmit2(url) {
+    event.preventDefault();
+    console.log('TEEEEST');
+    //var formArray= $("form").serializeArray();
+    var data={};
+
+    // const data = JSON.stringify($(this).serializeArray());
+    sendAxiosQuery2(url, data);
 }
 

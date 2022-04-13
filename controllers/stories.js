@@ -29,9 +29,20 @@ exports.newStory = function (req, res) {
 
 }
 
-/**exports.getStoryData=function (req,res) {
-    let userData = req.body;
-    if (userData == null) {
-        res.status(403).send('No data sent!')
-    }
-}*/
+/**
+ * Method for getting all active stories given a server request.
+ * @param req
+ * @param res
+ */
+exports.getActiveStoryData=function (req,res) {
+
+    var query = Story.find();
+    query.select('title author');
+    query.exec(function (err, stories) {
+        if (err){
+            console.log('Error in retrieving stories.');
+        }
+        console.log("Found stories from MongoDB!"+stories);
+        res.json(stories);
+    })
+}
