@@ -38,11 +38,10 @@ async function initCanvas(sckt, imageUrl) {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
 
-                // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
-                // Note: Story id is set to 1 for now for testing purposes.It will get adapated
-                // to be the id of the corresponding story the annotation is drawn on.
-                 //const annot_object = new DrawnAnnotation(1, ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
-                 //await storeCachedData(annot_object); //Cache the annotation in indexedDB
+                // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later.
+                let roomId=document.getElementById('roomNo').value;
+                const annot_object = new DrawnAnnotation(roomId, ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+                await storeCachedData(annot_object); //Cache the annotation in indexedDB
 
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness

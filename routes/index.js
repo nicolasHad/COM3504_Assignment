@@ -7,7 +7,7 @@ initDB.init();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('home', { title: 'Image Browsing' });
+  res.render('index', { title: 'Image Browsing' });
 });
 
 /* GET generateRoom page, called index in this case . */
@@ -28,6 +28,11 @@ router
     })
     .post('/home', story.getActiveStoryData);
 
+
+router
+    .get('/getSelectedStoryData', function (req,res,next) {
+    })
+    .post('/index',story.getSelectedStoryData)
 
 /* GET home page.
 router

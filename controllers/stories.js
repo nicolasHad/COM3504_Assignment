@@ -21,6 +21,7 @@ exports.newStory = function (req, res) {
     story.save()
         .then ((results) => {
             console.log(results._id);
+            storeCachedData(story);
             res.json(story);
         })
         .catch ((error) => {
@@ -42,7 +43,24 @@ exports.getActiveStoryData=function (req,res) {
         if (err){
             console.log('Error in retrieving stories.');
         }
-        console.log("Found stories from MongoDB!"+stories);
+        //console.log("Found stories from MongoDB!"+stories);
         res.json(stories);
+    })
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+exports.getSelectedStoryData=function (req,res) {
+    //req contains the id of the story to retrieve.
+    var query=Story.find({'author':req.body.author.toString(),
+    'title':req.body.title.toString()});
+    query.exec(function(err,story){
+        if(err){
+            console.log('Cannot retrieve story.');
+        }
+        res.json(story);
     })
 }

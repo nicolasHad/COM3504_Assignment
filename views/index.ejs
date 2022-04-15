@@ -5,12 +5,21 @@
     <script src="/socket.io/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/javascripts/index.js"></script>
     <script src="/javascripts/canvas.js"></script>
     <script src="/javascripts/database.js" type="module"></script>
 </head>
 <body onload="init()">
+
+<div class="center" id="center">
+    <h3 class="mb-4">Stories</h3>
+    <a href="/createStory" class="btn btn-success">New Story</a>
+
+</div>
+
 <div id="initial_form" style="display: block">
     <h1><%= title %></h1>
     <p>Please insert the id of the Room you want to Join, if you do not have a room id, click Generate Room</p>
@@ -27,6 +36,9 @@
         <button id="connect" onclick="connectToRoom()">Connect</button>
     </form>
 </div>
+
+<div class="offline_div" id="offline_div" style="display: none">You are offline</div>
+
 <div id="chat_interface" style="display: none">
     <div>
     <p><div id="who_you_are" style="display: inline" style="height: 10vh"></div>, you are in room: <div id="in_room" style="display: inline"></div>

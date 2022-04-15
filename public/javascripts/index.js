@@ -13,7 +13,6 @@ function init() {
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
 
-    //Here include the indexedDB init function(ONCE I implement it) if the browser supports idb(can be found in Week4.b -IndexedDB solution)
     if('indexedDB' in window) {
         initDatabase();
     }
@@ -21,8 +20,9 @@ function init() {
         console.log('This browser doesn\'t support IndexedDB');
     }
 
-    //testDataLoad(false);
-
+    onSubmit2('/home');
+    let roomList=JSON.parse(localStorage.getItem('roomList'));
+    console.log(roomList);
     //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
 }
 
@@ -33,7 +33,7 @@ function init() {
  * @param forceReload true if the data is to be loaded from the server
  */
 function loadData(forceReload){
-    var storyList=[];
+    var storyList=JSON.parse(localStorage.getItem('stories'));;
     storyList=removeDuplicates(storyList);
     retrieveAllStoriesData(storyList, forceReload);
 }
@@ -59,22 +59,63 @@ function retrieveAllStoriesData(storyList, forceReload){
  * @param storyID(?)
  * @param forceReload true if the data is to be retrieved from the server
  */
-//Maybe we can use promises here(try getting data from mongo, if request to mongoDB fails,
-// then go to indexedDB in the catch statement(?)
-async function loadStoryData(story,forceReload){
-    let cachedData=await getCachedData(story);
+async function loadStoryData(author,title,forceReload){
+    let cachedData=await getCachedStoryData(author,title);
     if(!forceReload && cachedData && cachedData.length>0){
         for (let res of cachedData) {
-            //addToResults(res);
+            addToResults(res);
         }
     }
     else{
-        //get to the server
+        const input = JSON.stringify({author:author,title:title});
+        $.ajax({
+            url:'/getSelectedStoryData',
+            data: input,
+            contentType: 'application/json',
+            type: 'POST',
+            success: function(dataR){
+                addToResults(dataR);
+                storeCachedData(dataR);
+                if(document.getElementById('offline_div')!=null)
+                    document.getElementById('offline_div').style.display='none';
+            },
+            //If the server request has failed, show the cached data
+            error: function (xhr,status,error) {
+                //showOfflineWarning();
+                getCachedStoryData(author,title);
+                const dvv = document.getElementById('offline_div');
+                if(dvv!=null)
+                    dvv.style.display='block';
+            }
+        });
     }
-    return null;
+
+    if(document.getElementById('story_list')!=null)
+        document.getElementById('story_list').style.display='none';
 }
 
-async function loadAnnotationData(story,forceReload){
+function addToResults(dataR) {
+    if (document.getElementById('results') != null) {
+        const row = document.createElement('div');
+        // appending a new row
+        document.getElementById('results').appendChild(row);
+        // formatting the row by applying css classes
+        row.classList.add('card');
+        row.classList.add('my_card');
+        row.classList.add('bg-faded');
+        // the following is far from ideal. we should really create divs using javascript
+        // rather than assigning innerHTML
+        row.innerHTML = "<div class='card-block'>" +
+            "<div class='row'>" +
+            "<div class='col-sm'>" + dataR.author + "</div>" +
+            "<div class='col-sm'>" + dataR.title + "</div>" +
+            "<div class='col-sm'>" + dataR._id + "</div>" +
+            "<div class='col-sm'>" + dataR.description + "</div>" +
+            "<div class='col-sm'></div></div></div>";
+    }
+}
+
+async function loadAnnotationData(room,forceReload){
     return 0;
 }
 
@@ -82,7 +123,7 @@ async function loadAnnotationData(story,forceReload){
  * it enables selecting a story from the stories menu.
  * it saves the selected story in the database so that it can be retrieved next time
  * @param story
- */
+ *
 function selectStory(story) {
     var storyList=JSON.parse(localStorage.getItem('stories'));
     if (storyList==null) storyList=[];
@@ -90,6 +131,22 @@ function selectStory(story) {
     storyList = removeDuplicates(storyList);
     localStorage.setItem('storyList', JSON.stringify(storyList));
     retrieveAllStoriesData(storyList, true);
+}
+*/
+
+//Called every time the user connects toa room.
+//So that we keep track of which rooms were visited.
+//Will use the list of vidited rooms to retrieve annotation and story data for each room, so
+//that the user can re-visit visited rooms.
+function selectRoom(roomId) {
+    var roomList=JSON.parse(localStorage.getItem('roomList'));
+    if (roomList==null)
+        roomList=[];
+    roomList.push(roomId);
+    roomList = removeDuplicates(roomList);
+    localStorage.setItem('roomList', JSON.stringify(roomList));
+    //retrieveAllStoriesData(roomList, true);
+    console.log('room '+roomId+' added to roomList');
 }
 
 /**
@@ -133,10 +190,11 @@ async function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
 
     // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later
-    // Note: Story id is set to 1 for now for testing purposes.It will get adapated
+    // Note: Story id is set to 1 for now for testing purposes.It will get adapted
     // to be the id of the corresponding story the annotation is drawn on.
-    //const annot_object = new WrittenAnnotation(1,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
-    //await storeCachedData(annot_object);
+    let roomId=document.getElementById('roomNo').value;
+    const annot_object = new WrittenAnnotation(roomId,'test_body'); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
+    await storeCachedData(annot_object);
 
     // @todo send the chat message
 }
@@ -147,7 +205,10 @@ async function sendChatText() {
  */
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
-    name = document.getElementById('firstname').value; // Bug fixed, elementId was wrong
+    name = document.getElementById('firstname').value;
+
+    selectRoom(roomNo); // Add the room to the lists of rooms visited.
+
     let imageUrl= document.getElementById('image_url').value;
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
@@ -181,6 +242,8 @@ function hideLoginInterface(room, userId) {
     document.getElementById('chat_interface').style.display = 'block';
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('center').style.display = 'none';
 }
 
 
@@ -208,8 +271,45 @@ function onSubmit(url) {
     event.preventDefault();
 }
 
+//TESTING METHODS//
+function sendAxiosQuery2(url, data) {
+    axios.post(url, data)
+        .then((dataR) => {
+            // we need to JSON stringify the object
+            for (let rec of dataR.data) {
+                const row = document.createElement('div');
+                    // appending a new row
+                    document.getElementById('results').appendChild(row);
+                    // formatting the row by applying css classes
+                    row.classList.add('card');
+                    row.classList.add('my_card');
+                    row.classList.add('bg-faded');
+                    row.innerHTML = "<div class='card-block'>" +
+                        "<div class='row'>" +
+                        "<div class='col-sm'>" + rec.author + "</div>" +
+                        "<div class='col-sm'>" + rec.title + "</div>" +
+                        "<div class='col-sm'>" + rec._id + "</div>" +
+                        "<div class='col-sm'>" + rec.description + "</div>" +
+                        "<div class='col-sm'></div></div></div>";
+            }
+        })
+        .catch(function (response) {
+            alert(JSON.stringify(response));
+        })
+}
+
+function onSubmit2(url) {
+    event.preventDefault();
+    //var formArray= $("form").serializeArray();
+    var data={};
+
+    // const data = JSON.stringify($(this).serializeArray());
+    sendAxiosQuery2(url, data);
+}
+
 // Create the annotations/story classes.(NOT SURE IF WE REALLY NEED THEM,IF NOT IGNORE)
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
+//I've changed the story field to room, because the annotations are linked to the room,not the story.
 class WrittenAnnotation{
     constructor(room, body) {
         this.room=room;
@@ -230,29 +330,7 @@ class DrawnAnnotation{
         this.currY = currY;
         this.color = color;
         this.thickness = thickness;
+        this.type = "annotation";
     }
-}
-
-//TESTING METHODS//
-function sendAxiosQuery2(url, data) {
-    axios.post(url, data)
-        .then((dataR) => {// no need to JSON parse the result, as we are using
-            // we need to JSON stringify the object
-            document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
-            console.log('IN SENDAXIOSQUERY2');
-        })
-        .catch(function (response) {
-            alert(JSON.stringify(response));
-        })
-}
-
-function onSubmit2(url) {
-    event.preventDefault();
-    console.log('TEEEEST');
-    //var formArray= $("form").serializeArray();
-    var data={};
-
-    // const data = JSON.stringify($(this).serializeArray());
-    sendAxiosQuery2(url, data);
 }
 
