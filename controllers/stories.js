@@ -1,7 +1,6 @@
 let Story = require('../models/stories');
 
 //This function gets the data inputted in the form and sends it to the database
-// For Nicolas- Here call the storeCachedData method to cache the story using indexedDB as soon as the story is created.
 exports.newStory = function (req, res) {
     let userData = req.body;
     if (userData == null) {
@@ -16,12 +15,9 @@ exports.newStory = function (req, res) {
     });
     console.log('received: ' + story);
 
-    //storeCachedData(story);
-
     story.save()
         .then ((results) => {
             console.log(results._id);
-            storeCachedData(story);
             res.json(story);
         })
         .catch ((error) => {

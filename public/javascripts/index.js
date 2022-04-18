@@ -23,6 +23,7 @@ function init() {
     onSubmit2('/home');
     let roomList=JSON.parse(localStorage.getItem('roomList'));
     console.log(roomList);
+
     //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
 }
 
@@ -76,6 +77,7 @@ async function loadStoryData(author,title,forceReload){
             success: function(dataR){
                 addToResults(dataR);
                 storeCachedData(dataR);
+                return dataR;
                 if(document.getElementById('offline_div')!=null)
                     document.getElementById('offline_div').style.display='none';
             },
@@ -86,6 +88,7 @@ async function loadStoryData(author,title,forceReload){
                 const dvv = document.getElementById('offline_div');
                 if(dvv!=null)
                     dvv.style.display='block';
+                return getCachedStoryData(author,title);
             }
         });
     }
@@ -119,24 +122,9 @@ async function loadAnnotationData(room,forceReload){
     return 0;
 }
 
-/**
- * it enables selecting a story from the stories menu.
- * it saves the selected story in the database so that it can be retrieved next time
- * @param story
- *
-function selectStory(story) {
-    var storyList=JSON.parse(localStorage.getItem('stories'));
-    if (storyList==null) storyList=[];
-    storyList.push(story);
-    storyList = removeDuplicates(storyList);
-    localStorage.setItem('storyList', JSON.stringify(storyList));
-    retrieveAllStoriesData(storyList, true);
-}
-*/
-
 //Called every time the user connects toa room.
 //So that we keep track of which rooms were visited.
-//Will use the list of vidited rooms to retrieve annotation and story data for each room, so
+//Will use the list of visited rooms to retrieve annotation and story data for each room, so
 //that the user can re-visit visited rooms.
 function selectRoom(roomId) {
     var roomList=JSON.parse(localStorage.getItem('roomList'));
@@ -197,6 +185,7 @@ async function sendChatText() {
     await storeCachedData(annot_object);
 
     // @todo send the chat message
+    // chat.on code.
 }
 
 /**
@@ -207,13 +196,21 @@ function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     name = document.getElementById('firstname').value;
 
+    //let author=document.getElementById('story_author').value;
+    //let title=document.getElementById('story_title').value;
+
     selectRoom(roomNo); // Add the room to the lists of rooms visited.
+
+    //let storyData=loadStoryData(author,title,false);
+    //console.log(storyData);
 
     let imageUrl= document.getElementById('image_url').value;
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
     initCanvas(socket, imageUrl);
     hideLoginInterface(roomNo, name);
+
+    //initChatSocket code.
 }
 
 /**
@@ -256,11 +253,11 @@ function sendAxiosQuery(url, data) {
             document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
         })
         .catch(function (response) {
-            alert(response.toJSON());
+            alert(response);
         })
 }
 
-function onSubmit(url) {
+async function onSubmit(url) {
     var formArray= $("form").serializeArray();
     var data={};
     for (index in formArray){
@@ -314,14 +311,12 @@ class WrittenAnnotation{
     constructor(room, body) {
         this.room=room;
         this.body=body;
-        this.type = "annotation";
     }
 }
 
 class DrawnAnnotation{
     constructor(room, ctx, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
         this.room=room;
-        this.ctx=ctx;
         this.canvas_width = canvas_width;
         this.canvas_height = canvas_height;
         this.prevX = prevX;
@@ -330,7 +325,6 @@ class DrawnAnnotation{
         this.currY = currY;
         this.color = color;
         this.thickness = thickness;
-        this.type = "annotation";
     }
 }
 

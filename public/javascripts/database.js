@@ -39,7 +39,6 @@ class DrawnAnnotation{
  **/
 
 import * as idb from './idb/index.js';
-
 let db;
 
 const STORIES_DB_NAME = 'db_stories_1';
@@ -101,7 +100,7 @@ async function storeCachedData(object){
         await initDatabase();
     if(db) {
         try{
-            if(object.type='Story')
+            if(object.author!=null)
                 var store_n = STORIES_STORE_NAME;
             else
                 var store_n = ANNOTATIONS_STORE_NAME;
