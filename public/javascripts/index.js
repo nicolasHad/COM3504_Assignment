@@ -1,7 +1,6 @@
 let name = null;
 let roomNo = null;
-let socket=null;
-
+let chat = io.connect('/chat');
 
 /**
  * called by <body onload>
@@ -13,8 +12,24 @@ function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
+    roomNo = document.getElementById('roomNo').value;
 
-    //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
+    //@todo here is where you should initialise the socket operations as described in the lectures (room joining, chat message receipt etc.)
+    chat.on('joined', function (room, userId) {
+        if (userId === name) {
+            // it enters the chat
+            hideLoginInterface(roomNo, userId);
+        } else {
+            // notifies that someone has joined the room
+            writeOnHistory('<b>' + userId + '</b>' + ' joined room ' + roomNo);
+        }
+    });
+    // called when a message is received
+    chat.on('chat', function (room, userId, chatText) {
+        let who = userId
+        if (userId === name) who = 'Me';
+        writeOnHistory('<b>' + who + ':</b> ' + chatText);
+    });
 }
 
 /**
@@ -34,6 +49,8 @@ function generateRoom() {
 function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
     // @todo send the chat message
+    chat.emit('chat', roomNo, name, chatText);
+    document.getElementById('chat_input').value='';
 }
 
 /**
@@ -46,7 +63,8 @@ function connectToRoom() {
     let imageUrl= document.getElementById('image_url').value;
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
-    initCanvas(socket, imageUrl);
+    chat.emit('create or join', roomNo, name);
+    initCanvas(chat, imageUrl);
     hideLoginInterface(roomNo, name);
 }
 
