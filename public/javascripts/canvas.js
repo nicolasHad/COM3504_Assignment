@@ -41,7 +41,7 @@ async function initCanvas(sckt, imageUrl) {
                 // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later.
                 let roomId=document.getElementById('roomNo').value;
                 const annot_object = new DrawnAnnotation(roomId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
-                await storeCachedData(annot_object); //Cache the annotation in indexedDB
+                await storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
 
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness

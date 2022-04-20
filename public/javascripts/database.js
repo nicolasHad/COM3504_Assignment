@@ -92,19 +92,42 @@ window.initDatabase=initDatabase;
  * I assume it's also going to be called when an annotation is added to a story.
  * @returns {Promise<void>}
  */
-async function storeCachedData(object){
+async function storeCachedStory(author,title,description,imageUrl){
     // Remember that we have to cache stories AND their annotations.
     // So We check the type of given object(story or annotation) and act accordingly.
+    console.log('Inserting story with data: '+author+','+title+','+description+','+imageUrl);
+    if(!db)
+        await initDatabase();
+    if(db) {
+        try{
+            var store_n = STORIES_STORE_NAME;
+            let tx = await db.transaction(store_n, 'readwrite');
+            let store = await tx.objectStore(store_n);
+            await store.put({
+                author: author,
+                title: title,
+                description: description,
+                imageUrl:imageUrl
+            });
+
+                await tx.complete;
+            console.log('Added item to the store.', JSON.stringify(author+','+title+','+description+','+imageUrl));
+        }
+        catch (error) {
+            //localStorage.setItem(JSON.stringify(object));
+            console.log(error);
+        };
+    }
+}
+window.storeCachedStory = storeCachedStory;
+
+async function storeCachedAnnotation(object){
     console.log('Inserting: '+JSON.stringify(object));
     if(!db)
         await initDatabase();
     if(db) {
         try{
-            if(object.author!=null)
-                var store_n = STORIES_STORE_NAME;
-            else
-                var store_n = ANNOTATIONS_STORE_NAME;
-
+            var store_n = ANNOTATIONS_STORE_NAME;
             let tx = await db.transaction(store_n, 'readwrite');
             let store = await tx.objectStore(store_n);
             await store.put(object);
@@ -117,8 +140,7 @@ async function storeCachedData(object){
         };
     }
 }
-
-window.storeCachedData = storeCachedData;
+window.storeCachedAnnotation = storeCachedAnnotation;
 
 /**
  *
@@ -128,12 +150,12 @@ window.storeCachedData = storeCachedData;
 // 2 ways  of doing this. I can either stick to using 2 different stores for stories and annotations(and every time a story is to be
 // retrieved using author,title as composite 'PK' I just retrieve the corresponding annotations as well.Second option is to store
 // stories and their annotations in the same store, and retrieve them altogether.
-async function getCachedStoryData(author,title) {
+async function getCachedStoryData(title) {
     if (!db)
         await initDatabase();
     if (db) {
         try {
-            console.log('fetching story. Title:' + title + '.Author:' + author);
+            console.log('fetching story. Title:' + title);
             var store_stories = STORIES_STORE_NAME;
 
             //Define different transactions,stores,indexes and readingLists for both stories and annotations.
@@ -158,14 +180,17 @@ async function getCachedStoryData(author,title) {
                 const value=localStorage.getItem(title);
                 if(value==null)
                     return finalResults;
+                else finalResults.push(value);
+                return finalResults;
             }
         } catch (e) {
             console.log(e);
+            return e;
         }
     }
 
     else {
-        const value = localStorage.getItem(author);
+        const value = localStorage.getItem(title);
         let finalResults = [];
         if(value == null)
             return finalResults;
@@ -175,7 +200,7 @@ async function getCachedStoryData(author,title) {
 }
 window.getCachedStoryData = getCachedStoryData;
 
-async function getCachedAnnotationData(story){
+async function getCachedAnnotationData(room){
     if (!db)
         await initDatabase();
     if (db) {
@@ -187,7 +212,7 @@ async function getCachedAnnotationData(story){
             let tx_annotations = await db.transaction(store_annotations,'readonly');
             let annotation_store = await tx_annotations.objectStore(store_annotations);
             let index_annotations = await annotation_store.index('story');
-            let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only(story)); //Assuming that title is story's PK, can change.
+            let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only(room)); //Assuming that title is story's PK, can change.
 
             await tx_annotations.complete;
 
@@ -204,7 +229,7 @@ async function getCachedAnnotationData(story){
                 console.log(finalResults);//for testing, remove later.
             }
             else{
-                const value=localStorage.getItem(story);
+                const value=localStorage.getItem(room);
                 if(value==null)
                     return finalResults;
             }
@@ -214,7 +239,7 @@ async function getCachedAnnotationData(story){
     }
 
     else {
-        const value = localStorage.getItem(author);
+        const value = localStorage.getItem(room);
         let finalResults = [];
         if(value == null)
             return finalResults;
