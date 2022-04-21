@@ -19,6 +19,8 @@ let filesToCache = [
     '/',
     'javascripts/app.js',
     'javascripts/index.js',
+    'javascripts/canvas.js',
+    '/stylesheets/style.css',
 ];
 
 
