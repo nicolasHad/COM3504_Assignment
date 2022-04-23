@@ -36,12 +36,10 @@ async function initCanvas(sckt, imageUrl) {
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
             if (flag) {
-                drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
-
-                // These 2 lines is for me(Nicolas), I just put it here and I'll come back to it later.
                 let roomId=document.getElementById('roomNo').value;
+                drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
                 const annot_object = new DrawnAnnotation(roomId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
-                await storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
+                storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
 
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
@@ -92,7 +90,30 @@ async function initCanvas(sckt, imageUrl) {
             }
         }, 10);
     });
+
+    // add code for retrieving any cached annotations for the current roomNo(meaning that the room has been visited before)
+    // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations).
+    $('#chat_interface').ready(setTimeout(async function (e) {
+        let roomId=document.getElementById('roomNo').value;
+        const cachedAnnotations =  await getCachedAnnotationData(roomId)
+            .then((response) => {
+                //console.log(response);
+                return response;
+            })
+        for(let ann of cachedAnnotations) {
+            if (ann.currX != null) {
+                //console.log(ann);
+                drawOnCanvas(ctx, ann.canvas_width,ann.canvas_height, ann.prevX,ann.prevY,ann.currX,ann.currY,'red',4);
+            }
+            else{
+                console.log(ann);
+                writeOnHistory(ann.body);
+            }
+        }
+    },100));
 }
+
+
 
 /**
  * called when it is required to draw the image on the canvas. We have resized the canvas to the same image size

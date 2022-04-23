@@ -33,7 +33,7 @@ function init() {
  * @param forceReload true if the data is to be loaded from the server
  */
 function loadData(forceReload){
-    var roomList=JSON.parse(localStorage.getItem('roomList'));;
+    var roomList=JSON.parse(localStorage.getItem('roomList'));
     roomList=removeDuplicates(roomList);
     retrieveAllStoriesData(roomList, forceReload);
 }
@@ -49,6 +49,24 @@ function retrieveAllStoriesData(roomList, forceReload){
     refreshStoryList();
     for (let index in roomList)
         loadStoryData(roomList[index], forceReload);
+}
+
+function listAllVisitedRooms(){
+    var roomList=JSON.parse(localStorage.getItem('roomList'));
+    for (let index of roomList) {
+        const row = document.createElement('div');
+        // appending a new row
+        document.getElementById('roomhistory').appendChild(row);
+        // formatting the row by applying css classes
+        row.classList.add('card');
+        row.classList.add('my_card');
+        row.classList.add('bg-faded');
+        row.innerHTML = "<div class='card-block'>" +
+            "<div class='row'>" +
+            "<div class='col-sm'>" + index + "</div>" +
+            "<div class='col-sm'></div></div></div>";
+    }
+
 }
 
 /**
@@ -118,10 +136,6 @@ function addToResults(dataR) {
             "<div class='col-sm'>" + dataR.description + "</div>" +
             "<div class='col-sm'></div></div></div>";
     }
-}
-
-async function loadAnnotationData(room,forceReload){
-    return 0;
 }
 
 async function storeStoryINIdb() {
@@ -284,7 +298,7 @@ class WrittenAnnotation{
 }
 
 class DrawnAnnotation{
-    constructor(room, ctx, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
+    constructor(room, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
         this.room=room;
         this.canvas_width = canvas_width;
         this.canvas_height = canvas_height;

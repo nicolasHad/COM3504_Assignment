@@ -17,6 +17,7 @@
 <div class="center" id="center">
     <h3 class="mb-4">Stories</h3>
     <a href="/createStory" class="btn btn-success">New Story</a>
+    <a href="/visitedRooms" class="btn btn-success">Visited rooms</a>
 
 </div>
 
@@ -35,10 +36,12 @@
             <input type="text" id="roomNo" name="roomNo">
             <button id="roomNoGenerator" onclick="generateRoom()">Generate Room</button>
         </p>
-        <p style=" width: 100%"><label for="image_url"> Image (URL) </label><input type="text" id="image_url" name="image_url"></p>
         <button id="connect" onclick="connectToRoom()">Connect</button>
+        <div id="roomhistory" style="margin-top:30px"></div>
     </form>
 </div>
+
+<button id="view_history" onclick="listAllVisitedRooms()">History</button>
 
 <div class="offline_div" id="offline_div" style="display: none">You are offline</div>
 

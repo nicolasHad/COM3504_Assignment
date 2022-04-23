@@ -55,7 +55,7 @@ async function initDatabase(){
         db = await idb.openDB(STORIES_DB_NAME, 2, {
             upgrade(upgradeDB,oldVersion,newVersion){
                 // If this is the first time the db is opened, check if the stories story is there,if not,create it.
-                if(!upgradeDB.objectStoreNames.contains(STORIES_STORE_NAME)) {
+                if(!upgradeDB.objectStoreNames.contains(STORIES_STORE_NAME) && !upgradeDB.objectStoreNames.contains(ANNOTATIONS_STORE_NAME)) {
                     // Define the primary key and set it to autoincrement.
                     let storiesDB=upgradeDB.createObjectStore(STORIES_STORE_NAME,{
                         keyPath: 'id',
@@ -72,7 +72,7 @@ async function initDatabase(){
                     storiesDB.createIndex('title', 'title', {unique:false,multiEntry:true});
 
                     // An annotation belongs to a story, so create an index so we can search annotations depending on which story they belong.
-                    annotationsDB.createIndex('story', 'story', {unique:false, multiEntry:true});
+                    annotationsDB.createIndex('room', 'room', {unique:false, multiEntry:true});
                 }
             },
             // When it's not possible to connect.
@@ -130,9 +130,29 @@ async function storeCachedAnnotation(object){
             var store_n = ANNOTATIONS_STORE_NAME;
             let tx = await db.transaction(store_n, 'readwrite');
             let store = await tx.objectStore(store_n);
-            await store.put(object);
-            await tx.complete;
-            console.log('Added item to the store.', JSON.stringify(object));
+            if(object.currY == null) {
+                await store.put({
+                    room: object.room,
+                    body: object.body
+                });
+                await tx.complete;
+                console.log('Added item to the store.', JSON.stringify(object));
+            }
+            else{
+                await store.put({
+                    room: object.room,
+                    canvas_width : object.canvas_width,
+                    canvas_height : object.canvas_height,
+                    prevX : object.prevX,
+                    prevY : object.prevY,
+                    currX : object.currX,
+                    currY : object.currY,
+                    color : object.color,
+                    thickness : object.thickness
+                });
+                await tx.complete;
+                console.log('Added item to the store.', JSON.stringify(object));
+            }
         }
         catch (error) {
             //localStorage.setItem(JSON.stringify(object));
@@ -161,7 +181,7 @@ async function getCachedStoryData(title) {
             //Define different transactions,stores,indexes and readingLists for both stories and annotations.
             let tx_stories = await db.transaction(store_stories,'readonly');
             let story_store = await tx_stories.objectStore(store_stories);
-            let index_stories = await story_store.index('title'); // Maybe indexing a story just by title is not good, need to define a proper PK.
+            let index_stories = await story_store.index('title');
             let readingList_stories = await index_stories.getAll(IDBKeyRange.only(title));
 
             await tx_stories.complete;
@@ -200,6 +220,11 @@ async function getCachedStoryData(title) {
 }
 window.getCachedStoryData = getCachedStoryData;
 
+/**
+ * Returns all cached annottations(written and drawn) for a room.(should be room,title).
+ * @param room
+ * @returns {Promise<*[]|*>}
+ */
 async function getCachedAnnotationData(room){
     if (!db)
         await initDatabase();
@@ -211,28 +236,13 @@ async function getCachedAnnotationData(room){
             //Define different transactions,stores,indexes and readingLists for both stories and annotations.
             let tx_annotations = await db.transaction(store_annotations,'readonly');
             let annotation_store = await tx_annotations.objectStore(store_annotations);
-            let index_annotations = await annotation_store.index('story');
+            let index_annotations = await annotation_store.index('room');
             let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only(room)); //Assuming that title is story's PK, can change.
 
             await tx_annotations.complete;
 
-            let finalResults=[];
-            // Get the annotations as well.
-            if(readingList_annotations && readingList_annotations.length>0){
-                let max;
-                for (let elem of readingList_annotations)
-                    if(!max || elem.date>max.date)
-                        max = elem;
-                if (max)
-                    finalResults.push(max);
-                return finalResults;
-                console.log(finalResults);//for testing, remove later.
-            }
-            else{
-                const value=localStorage.getItem(room);
-                if(value==null)
-                    return finalResults;
-            }
+            let finalResults=readingList_annotations;
+            return finalResults;
         } catch (e) {
             console.log(e);
         }
