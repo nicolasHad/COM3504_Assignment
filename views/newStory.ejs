@@ -3,6 +3,7 @@
 <head>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <script src="/javascripts/index.js"></script>
+    <script src="/javascripts/database.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
@@ -15,7 +16,7 @@
             <input type="text" id="authorDescription" name="authorDescription">
             <input type="text" id="image_url" name="image_url">
         </p>
-        <p><input type="submit" name="g" value="Submit" id="g"></p>
+        <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" id="g"></p>
 
     </form>
 

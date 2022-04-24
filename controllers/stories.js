@@ -25,3 +25,37 @@ exports.newStory = function (req, res) {
         })
 
 }
+
+/**
+ * Method for getting all active stories given a server request.
+ * @param req
+ * @param res
+ */
+exports.getActiveStoryData=function (req,res) {
+
+    var query = Story.find();
+    query.select('title author');
+    query.exec(function (err, stories) {
+        if (err){
+            console.log('Error in retrieving stories.');
+        }
+        //console.log("Found stories from MongoDB!"+stories);
+        res.json(stories);
+    })
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ */
+exports.getSelectedStoryData=function (req,res) {
+    //req contains the id of the story to retrieve.
+    var query=Story.find({'title':req.body.title.toString()});
+    query.exec(function(err,story){
+        if(err){
+            console.log('Cannot retrieve story.');
+        }
+        res.json(story);
+    })
+}

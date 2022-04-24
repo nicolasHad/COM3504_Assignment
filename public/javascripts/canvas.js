@@ -11,7 +11,7 @@ let color = 'red', thickness = 4;
  * @param sckt the open socket to register events on
  * @param imageUrl teh image url to download
  */
-function initCanvas(sckt, imageUrl) {
+async function initCanvas(sckt, imageUrl) {
     socket = sckt;
     let flag = false,
         prevX, prevY, currX, currY = 0;
@@ -22,7 +22,7 @@ function initCanvas(sckt, imageUrl) {
     img.src = imageUrl;
 
     // event on the canvas when the mouse is on it
-    canvas.on('mousemove mousedown mouseup mouseout', function (e) {
+    canvas.on('mousemove mousedown mouseup mouseout', async function (e) {
         prevX = currX;
         prevY = currY;
         currX = e.clientX - canvas.position().left;
@@ -39,7 +39,12 @@ function initCanvas(sckt, imageUrl) {
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
             if (flag) {
+                let roomId=document.getElementById('roomNo').value;
+                let story=document.getElementById('story_title').value;
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
+                const annot_object = new DrawnAnnotation(roomId,story, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+                storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
+
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
                 //socket.emit('chat',roomNo, userId, 'Test');
@@ -61,6 +66,7 @@ function initCanvas(sckt, imageUrl) {
     // I suggest that you receive userId, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness
     // and then you call
     //let ctx0 = canvas[0].getContext('2d');
+
 
 
     // this is called when the src of the image is loaded
@@ -90,7 +96,29 @@ function initCanvas(sckt, imageUrl) {
             }
         }, 10);
     });
+
+    // code for retrieving any cached annotations for the current roomNo(meaning that the room has been visited before)
+    // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations).
+    $('#chat_interface').ready(setTimeout(async function (e) {
+        let roomId=document.getElementById('roomNo').value;
+        let story=document.getElementById('story_title').value;
+        const cachedAnnotations =  await getCachedAnnotationData(roomId,story)
+            .then((response) => {
+                return response;
+            })
+        console.log(cachedAnnotations);
+        for(let ann of cachedAnnotations) {
+            if (ann.currX != null) {
+                drawOnCanvas(ctx, ann.canvas_width,ann.canvas_height, ann.prevX,ann.prevY,ann.currX,ann.currY,'red',4);
+            }
+            else{
+                writeOnHistory(ann.body);
+            }
+        }
+    },100));
 }
+
+
 
 /**
  * called when it is required to draw the image on the canvas. We have resized the canvas to the same image size

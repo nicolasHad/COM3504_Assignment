@@ -7,7 +7,7 @@ initDB.init();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('home', { title: 'Image Browsing' });
+  res.render('index', { title: 'Image Browsing' });
 });
 
 /* GET generateRoom page, called index in this case . */
@@ -15,11 +15,29 @@ router.get('/generateRoom', function(req, res, next) {
   res.render('index', { title: 'Image Browsing' });
 });
 
+router.get('/visitedRooms', function(req, res, next) {
+    res.render('visitedRooms');
+});
+
 /* GET newStory page and POST to the function which addes a new story to the databse in controllers/stories.js. */
 router.get('/createStory', function(req, res, next) {
   res.render('newStory', { title: 'Create a story' });
 })
     .post('/newStory', story.newStory);
+
+
+router
+    .get('/home',function (req,res,next){
+      res.render('home');
+    })
+    .post('/home', story.getActiveStoryData);
+
+
+router
+    .get('/getSelectedStoryData', function (req,res,next) {
+        res.render('index',{ title: 'Image Browsing' });
+    })
+    .post('/getSelectedStoryData',story.getSelectedStoryData)
 
 /* GET home page.
 router
