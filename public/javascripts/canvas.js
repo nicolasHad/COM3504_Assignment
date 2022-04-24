@@ -27,11 +27,14 @@ async function initCanvas(sckt, imageUrl) {
         prevY = currY;
         currX = e.clientX - canvas.position().left;
         currY = e.clientY - canvas.position().top;
+
         if (e.type === 'mousedown') {
             flag = true;
+            socket.emit('chat',roomNo, name, name+' has started drawing.');
         }
         if (e.type === 'mouseup' || e.type === 'mouseout') {
             flag = false;
+            socket.emit('chat',roomNo, name, name+' has finished drawing.');
         }
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
@@ -44,24 +47,26 @@ async function initCanvas(sckt, imageUrl) {
 
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
+                //socket.emit('chat',roomNo, userId, 'Test');
             }
         }
     });
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
     $('.canvas-clear').on('click', function (e) {
-        let c_width = canvas.width();
-        let c_height = canvas.height();
+        let c_width = canvas.width;
+        let c_height = canvas.height;
         ctx.clearRect(0, 0, c_width, c_height);
         // @todo if you clear the canvas, you want to let everyone know via socket.io (socket.emit...)
+        // socket.emit('chat',roomNo,name, name+' has cleared the canvas.');
 
     });
 
     // @todo here you want to capture the event on the socket when someone else is drawing on their canvas (socket.on...)
     // I suggest that you receive userId, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness
     // and then you call
-    //     let ctx = canvas[0].getContext('2d');
-    //     drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness)
+    //let ctx0 = canvas[0].getContext('2d');
+
 
 
     // this is called when the src of the image is loaded

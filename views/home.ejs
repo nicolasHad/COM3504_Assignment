@@ -8,9 +8,10 @@
     <script src="/javascripts/database.js" type="module"></script>
     <script src="/javascripts/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/javascripts/app.js"></script>
     <title>Stories</title>
 </head>
-<body>
+<body onload = "initServiceWorker()">
 <div class="center">
     <h1 class="mb-4">Stories</h1>
     <a href="/createStory" class="btn btn-success">New Story</a>

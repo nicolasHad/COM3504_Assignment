@@ -1,6 +1,7 @@
 let name = null;
 let roomNo = null;
-let socket=null;
+
+let chat = io.connect('/chat');
 
 /**
  * called by <body onload>
@@ -12,6 +13,8 @@ function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
+    roomNo = document.getElementById('roomNo').value;
+
 
     if('indexedDB' in window) {
         initDatabase();
@@ -23,7 +26,22 @@ function init() {
     let roomList=JSON.parse(localStorage.getItem('roomList'));
     console.log(roomList);
 
-    //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
+    //@todo here is where you should initialise the socket operations as described in the lectures (room joining, chat message receipt etc.)
+    chat.on('joined', function (room, userId) {
+        if (userId === name) {
+            // it enters the chat
+            hideLoginInterface(roomNo, userId);
+        } else {
+            // notifies that someone has joined the room
+            writeOnHistory('<b>' + userId + '</b>' + ' joined room ' + roomNo);
+        }
+    });
+    // called when a message is received
+    chat.on('chat', function (room, userId, chatText) {
+        let who = userId
+        if (userId === name) who = 'Me';
+        writeOnHistory('<b>' + who + ':</b> ' + chatText);
+    });
 }
 
 
@@ -192,6 +210,9 @@ async function sendChatText() {
     const annot_object = new WrittenAnnotation(roomId,chatText); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
     storeCachedAnnotation(annot_object);
 
+    // @todo send the chat message
+    chat.emit('chat', roomNo, name, chatText);
+    document.getElementById('chat_input').value='';
 }
 
 /**
@@ -211,7 +232,8 @@ async function connectToRoom() {
 
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
-    initCanvas(socket, JSON.parse(storyData).imageUrl);
+    chat.emit('create or join', roomNo, name);
+    initCanvas(chat, JSON.parse(storyData).imageUrl);
     hideLoginInterface(roomNo, name);
 
 }
