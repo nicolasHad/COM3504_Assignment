@@ -92,24 +92,21 @@ async function initCanvas(sckt, imageUrl) {
         }, 10);
     });
 
-    // add code for retrieving any cached annotations for the current roomNo(meaning that the room has been visited before)
+    // code for retrieving any cached annotations for the current roomNo(meaning that the room has been visited before)
     // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations).
     $('#chat_interface').ready(setTimeout(async function (e) {
         let roomId=document.getElementById('roomNo').value;
         let story=document.getElementById('story_title').value;
         const cachedAnnotations =  await getCachedAnnotationData(roomId,story)
             .then((response) => {
-                //console.log(response);
                 return response;
             })
         console.log(cachedAnnotations);
         for(let ann of cachedAnnotations) {
             if (ann.currX != null) {
-                //console.log(ann);
                 drawOnCanvas(ctx, ann.canvas_width,ann.canvas_height, ann.prevX,ann.prevY,ann.currX,ann.currY,'red',4);
             }
             else{
-                console.log(ann);
                 writeOnHistory(ann.body);
             }
         }

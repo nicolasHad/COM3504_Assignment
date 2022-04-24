@@ -224,8 +224,9 @@ async function getCachedStoryData(title) {
 window.getCachedStoryData = getCachedStoryData;
 
 /**
- * Returns all cached annottations(written and drawn) for a room.(should be room,title).
+ * Returns all cached annottations(written and drawn) for a room.
  * @param room
+ * @param story
  * @returns {Promise<*[]|*>}
  */
 async function getCachedAnnotationData(room,story){

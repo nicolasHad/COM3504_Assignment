@@ -26,29 +26,33 @@ function init() {
     //@todo here is where you should initialise the socket operations as described in teh lectures (room joining, chat message receipt etc.)
 }
 
+
 /**
  * given the list of previously visited stories for the user, it will retrieve all the STORIES data from
  * the server (or failing that) from the indexedDB, and the annotations of each story from indexedDB
  * @param forceReload true if the data is to be loaded from the server
  */
+/*
 function loadData(forceReload){
     var roomList=JSON.parse(localStorage.getItem('roomList'));
     roomList=removeDuplicates(roomList);
     retrieveAllStoriesData(roomList, forceReload);
 }
-
+*/
 /**
  * it cycles through the list of stories and requests the data from the server for each
  * story
- * @param cityList the list of the cities the user has requested
+ * @param roomList the list of the cities the user has requested
  * @param date the date for the forecasts (not in use)
  * @param forceReload true if the data is to be retrieved from the server
  */
+/*
 function retrieveAllStoriesData(roomList, forceReload){
     refreshStoryList();
     for (let index in roomList)
         loadStoryData(roomList[index], forceReload);
 }
+*/
 
 function listAllVisitedRooms(){
     var roomList=JSON.parse(localStorage.getItem('roomList'));
@@ -72,14 +76,12 @@ function listAllVisitedRooms(){
  * given one story, it queries the mongoDB to get the latest
  * the story object
  * if the request to the server fails, it shows the data stored in the indexedDB
- * Meanwhile, the annotations for the story are retrieved directly from indexedDB
- * @param storyID(?)
+ * @param title
  * @param forceReload true if the data is to be retrieved from the server
  */
 async function loadStoryData(title,forceReload){
     let cachedData=await getCachedStoryData(title);
     if(!forceReload && cachedData && cachedData.length>0){
-        console.log('TEST1');
         for (let res of cachedData) {
             addToResults(res);
         }
@@ -87,14 +89,12 @@ async function loadStoryData(title,forceReload){
     }
     else{
         const input = JSON.stringify({title:title});
-        let storyData='';
         $.ajax({
             url:'/getSelectedStoryData',
             data: input,
             contentType: 'application/json',
             type: 'POST',
             success: function(dataR){
-                console.log('TEST2');
                 //addToResults(dataR);
                 //handleResponse(dataR);
                 if(document.getElementById('offline_div')!=null)
@@ -102,7 +102,6 @@ async function loadStoryData(title,forceReload){
             },
             //If the server request has failed, show the cached data
             error: function (xhr,status,error) {
-                console.log('TEST3');
                 alert(error);
                 //showOfflineWarning();
                 const dvv = document.getElementById('offline_div');
@@ -117,9 +116,6 @@ async function loadStoryData(title,forceReload){
         document.getElementById('story_list').style.display='none';
 }
 
-/*function handleResponse(data) {
-    document.getElementById('imgUrl').value=data[0].imageUrl;
-}*/
 
 function addToResults(dataR) {
     if (document.getElementById('results') != null) {
@@ -149,10 +145,8 @@ async function storeStoryINIdb() {
     storeCachedStory(author,title,desc,url);
 }
 
-//Called every time the user connects toa room.
+//Called every time the user connects to a room.
 //So that we keep track of which rooms were visited.
-//Will use the list of visited rooms to retrieve annotation and story data for each room, so
-//that the user can re-visit visited rooms.
 function selectRoom(roomId) {
     var roomList=JSON.parse(localStorage.getItem('roomList'));
     if (roomList==null)
@@ -160,32 +154,22 @@ function selectRoom(roomId) {
     roomList.push(roomId);
     roomList = removeDuplicates(roomList);
     localStorage.setItem('roomList', JSON.stringify(roomList));
-    //retrieveAllStoriesData(roomList, true);
     console.log('room '+roomId+' added to roomList');
 }
 
 /**
- * Given a list of stories, it removes any duplicates
- * @param storyList
+ * Given a list of rooms, it removes any duplicates
+ * @param roomList
  * @returns {Array}
  */
-function removeDuplicates(storyList) {
+function removeDuplicates(roomList) {
     // remove any duplicate
     var uniqueNames=[];
-    $.each(storyList, function(i, el){
+    $.each(roomList, function(i, el){
         if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
     });
     return uniqueNames;
 }
-
-/**
- * it removes all forecasts from the result div
- */
-function refreshStoryList(){
-    if (document.getElementById('results')!=null)
-        document.getElementById('results').innerHTML='';
-}
-
 
 /**
  * called to generate a random room number
@@ -208,8 +192,6 @@ async function sendChatText() {
     const annot_object = new WrittenAnnotation(roomId,chatText); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
     storeCachedAnnotation(annot_object);
 
-    // @todo send the chat message
-    // chat.on code.
 }
 
 /**
@@ -226,14 +208,12 @@ async function connectToRoom() {
         .then((response) => {
             return JSON.stringify(response);
         })
-    console.log(storyData);
 
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
     initCanvas(socket, JSON.parse(storyData).imageUrl);
     hideLoginInterface(roomNo, name);
 
-    //initChatSocket code.
 }
 
 /**
