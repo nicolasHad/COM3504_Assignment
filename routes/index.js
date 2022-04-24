@@ -19,7 +19,6 @@ router.get('/visitedRooms', function(req, res, next) {
     res.render('visitedRooms');
 });
 
-
 /* GET newStory page and POST to the function which addes a new story to the databse in controllers/stories.js. */
 router.get('/createStory', function(req, res, next) {
   res.render('newStory', { title: 'Create a story' });
@@ -36,8 +35,9 @@ router
 
 router
     .get('/getSelectedStoryData', function (req,res,next) {
+        res.render('index',{ title: 'Image Browsing' });
     })
-    .post('/index',story.getSelectedStoryData)
+    .post('/getSelectedStoryData',story.getSelectedStoryData)
 
 /* GET home page.
 router

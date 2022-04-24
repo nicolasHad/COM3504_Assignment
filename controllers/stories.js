@@ -51,8 +51,7 @@ exports.getActiveStoryData=function (req,res) {
  */
 exports.getSelectedStoryData=function (req,res) {
     //req contains the id of the story to retrieve.
-    var query=Story.find({'author':req.body.author.toString(),
-    'title':req.body.title.toString()});
+    var query=Story.find({'title':req.body.title.toString()});
     query.exec(function(err,story){
         if(err){
             console.log('Cannot retrieve story.');

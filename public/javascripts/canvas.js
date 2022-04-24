@@ -37,8 +37,9 @@ async function initCanvas(sckt, imageUrl) {
         if (e.type === 'mousemove') {
             if (flag) {
                 let roomId=document.getElementById('roomNo').value;
+                let story=document.getElementById('story_title').value;
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
-                const annot_object = new DrawnAnnotation(roomId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+                const annot_object = new DrawnAnnotation(roomId,story, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
                 storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
 
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
@@ -95,11 +96,13 @@ async function initCanvas(sckt, imageUrl) {
     // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations).
     $('#chat_interface').ready(setTimeout(async function (e) {
         let roomId=document.getElementById('roomNo').value;
-        const cachedAnnotations =  await getCachedAnnotationData(roomId)
+        let story=document.getElementById('story_title').value;
+        const cachedAnnotations =  await getCachedAnnotationData(roomId,story)
             .then((response) => {
                 //console.log(response);
                 return response;
             })
+        console.log(cachedAnnotations);
         for(let ann of cachedAnnotations) {
             if (ann.currX != null) {
                 //console.log(ann);

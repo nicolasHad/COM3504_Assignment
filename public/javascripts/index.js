@@ -20,7 +20,6 @@ function init() {
         console.log('This browser doesn\'t support IndexedDB');
     }
 
-    //onSubmit2('/home');
     let roomList=JSON.parse(localStorage.getItem('roomList'));
     console.log(roomList);
 
@@ -88,6 +87,7 @@ async function loadStoryData(title,forceReload){
     }
     else{
         const input = JSON.stringify({title:title});
+        let storyData='';
         $.ajax({
             url:'/getSelectedStoryData',
             data: input,
@@ -95,21 +95,20 @@ async function loadStoryData(title,forceReload){
             type: 'POST',
             success: function(dataR){
                 console.log('TEST2');
-                addToResults(dataR);
-                //storeCachedStory(dataR); //revise this,params must change.
+                //addToResults(dataR);
+                //handleResponse(dataR);
                 if(document.getElementById('offline_div')!=null)
                     document.getElementById('offline_div').style.display='none';
-                return dataR;
             },
             //If the server request has failed, show the cached data
             error: function (xhr,status,error) {
                 console.log('TEST3');
+                alert(error);
                 //showOfflineWarning();
-                getCachedStoryData(title);
                 const dvv = document.getElementById('offline_div');
                 if(dvv!=null)
                     dvv.style.display='block';
-                return getCachedStoryData(title);
+                //handleResponse(getCachedStoryData(title));
             }
         });
     }
@@ -117,6 +116,10 @@ async function loadStoryData(title,forceReload){
     if(document.getElementById('story_list')!=null)
         document.getElementById('story_list').style.display='none';
 }
+
+/*function handleResponse(data) {
+    document.getElementById('imgUrl').value=data[0].imageUrl;
+}*/
 
 function addToResults(dataR) {
     if (document.getElementById('results') != null) {
@@ -223,6 +226,7 @@ async function connectToRoom() {
         .then((response) => {
             return JSON.stringify(response);
         })
+    console.log(storyData);
 
     if (!name) name = 'Unknown-' + Math.random();
     //@todo join the room
@@ -291,15 +295,17 @@ async function onSubmit(url) {
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
 //I've changed the story field to room, because the annotations are linked to the room,not the story.
 class WrittenAnnotation{
-    constructor(room, body) {
+    constructor(room, body, story) {
         this.room=room;
+        this.story=story;
         this.body=body;
     }
 }
 
 class DrawnAnnotation{
-    constructor(room, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
+    constructor(room, story, canvas_width, canvas_height, prevX, prevY, currX, currY, color, thickness) {
         this.room=room;
+        this.story=story;
         this.canvas_width = canvas_width;
         this.canvas_height = canvas_height;
         this.prevX = prevX;

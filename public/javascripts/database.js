@@ -72,7 +72,8 @@ async function initDatabase(){
                     storiesDB.createIndex('title', 'title', {unique:false,multiEntry:true});
 
                     // An annotation belongs to a story, so create an index so we can search annotations depending on which story they belong.
-                    annotationsDB.createIndex('room', 'room', {unique:false, multiEntry:true});
+                    annotationsDB.createIndex('room', ['room','story'], {unique:false});
+
                 }
             },
             // When it's not possible to connect.
@@ -133,6 +134,7 @@ async function storeCachedAnnotation(object){
             if(object.currY == null) {
                 await store.put({
                     room: object.room,
+                    story: object.story,
                     body: object.body
                 });
                 await tx.complete;
@@ -141,6 +143,7 @@ async function storeCachedAnnotation(object){
             else{
                 await store.put({
                     room: object.room,
+                    story: object.story,
                     canvas_width : object.canvas_width,
                     canvas_height : object.canvas_height,
                     prevX : object.prevX,
@@ -225,7 +228,7 @@ window.getCachedStoryData = getCachedStoryData;
  * @param room
  * @returns {Promise<*[]|*>}
  */
-async function getCachedAnnotationData(room){
+async function getCachedAnnotationData(room,story){
     if (!db)
         await initDatabase();
     if (db) {
@@ -237,7 +240,7 @@ async function getCachedAnnotationData(room){
             let tx_annotations = await db.transaction(store_annotations,'readonly');
             let annotation_store = await tx_annotations.objectStore(store_annotations);
             let index_annotations = await annotation_store.index('room');
-            let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only(room)); //Assuming that title is story's PK, can change.
+            let readingList_annotations = await index_annotations.getAll(IDBKeyRange.only([room,story])); //Assuming that title is story's PK, can change.
 
             await tx_annotations.complete;
 
