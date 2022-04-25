@@ -207,7 +207,8 @@ async function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
 
     let roomId=document.getElementById('roomNo').value;
-    const annot_object = new WrittenAnnotation(roomId,chatText); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
+    let story = document.getElementById('story_title').value;
+    const annot_object = new WrittenAnnotation(roomId,story,chatText); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
     storeCachedAnnotation(annot_object);
 
     // @todo send the chat message
@@ -236,6 +237,12 @@ async function connectToRoom() {
     initCanvas(chat, JSON.parse(storyData).imageUrl);
     hideLoginInterface(roomNo, name);
 
+    //set story details in view.
+    row=document.getElementById('story_desc');
+    row.innerHTML =
+        "<p>  <b>Author:</b>"+ JSON.parse(storyData).author+"</p>"+
+        "<p>  <b>Title:</b>"+ JSON.parse(storyData).title+"</p>"+
+        "<p>  <b>Description:</b>"+ JSON.parse(storyData).description+"</p>";
 }
 
 /**
@@ -297,7 +304,7 @@ async function onSubmit(url) {
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
 //I've changed the story field to room, because the annotations are linked to the room,not the story.
 class WrittenAnnotation{
-    constructor(room, body, story) {
+    constructor(room, story, body) {
         this.room=room;
         this.story=story;
         this.body=body;

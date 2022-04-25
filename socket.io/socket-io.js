@@ -17,10 +17,16 @@ exports.init = function(io) {
             chat.to(room).emit('chat', room, userId, chatText);
           });
 
+          socket.on('draw',function (room,userId,canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
+              socket.broadcast.to(room).emit('draw',room,userId, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness);
+          });
+
           socket.on('disconnect', function(){
             console.log('someone disconnected');
           });
         } catch (e) {
         }
+
       });
+
 }

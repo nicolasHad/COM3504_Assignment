@@ -30,11 +30,12 @@ async function initCanvas(sckt, imageUrl) {
 
         if (e.type === 'mousedown') {
             flag = true;
-            socket.emit('chat',roomNo, name, name+' has started drawing.');
+            socket.emit('chat',roomNo, name, ' has started drawing.');
         }
         if (e.type === 'mouseup' || e.type === 'mouseout') {
             flag = false;
-            socket.emit('chat',roomNo, name, name+' has finished drawing.');
+            if (e.type==='mouseup')
+                socket.emit('chat',roomNo, name, ' has finished drawing.');
         }
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
@@ -42,12 +43,9 @@ async function initCanvas(sckt, imageUrl) {
                 let roomId=document.getElementById('roomNo').value;
                 let story=document.getElementById('story_title').value;
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
+
                 const annot_object = new DrawnAnnotation(roomId,story, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
                 storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
-
-                // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
-                // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
-                //socket.emit('chat',roomNo, userId, 'Test');
             }
         }
     });
@@ -65,7 +63,13 @@ async function initCanvas(sckt, imageUrl) {
     // @todo here you want to capture the event on the socket when someone else is drawing on their canvas (socket.on...)
     // I suggest that you receive userId, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness
     // and then you call
-    //let ctx0 = canvas[0].getContext('2d');
+    socket.on('draw',function (room,userId,canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
+        let ctx0 = canvas[0].getContext('2d');
+        drawOnCanvas(ctx0, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness);
+        //DOESN'T WORK.DON'T KNOW WHY.
+        //Here is where we should cache the incoming annotations as well.
+    });
+
 
 
 
