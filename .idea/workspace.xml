@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3f0ddc10-a7bc-4336-8572-9a1005491480" name="Changes" comment="" />
+    <list default="true" id="3f0ddc10-a7bc-4336-8572-9a1005491480" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/javascripts/canvas.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/canvas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket.io/socket-io.js" beforeDir="false" afterPath="$PROJECT_DIR$/socket.io/socket-io.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.ejs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,6 +57,7 @@
       <workItem from="1650638348502" duration="11143000" />
       <workItem from="1650733872170" duration="14476000" />
       <workItem from="1650820116234" duration="3276000" />
+      <workItem from="1652120436284" duration="10223000" />
     </task>
     <servers />
   </component>

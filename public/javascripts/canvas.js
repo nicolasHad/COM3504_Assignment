@@ -43,7 +43,7 @@ async function initCanvas(sckt, imageUrl) {
                 let roomId=document.getElementById('roomNo').value;
                 let story=document.getElementById('story_title').value;
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
-
+                socket.emit('draw', roomNo, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
                 const annot_object = new DrawnAnnotation(roomId,story, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
                 storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
             }
@@ -56,14 +56,22 @@ async function initCanvas(sckt, imageUrl) {
         let c_height = canvas.height;
         ctx.clearRect(0, 0, c_width, c_height);
         // @todo if you clear the canvas, you want to let everyone know via socket.io (socket.emit...)
-        // socket.emit('chat',roomNo,name, name+' has cleared the canvas.');
+        ctx.drawImage(img, 0, 0, c_width, c_height);
+        socket.emit('clear canvas',roomNo,name);
+        socket.emit('chat',roomNo, name, ' has cleared the canvas.');
+    });
 
+    socket.on('clear canvas', function (roomNo,name) {
+        let c_width = canvas.width;
+        let c_height = canvas.height;
+        ctx.clearRect(0, 0, c_width, c_height);
+        ctx.drawImage(img, 0, 0, c_width, c_height);
     });
 
     // @todo here you want to capture the event on the socket when someone else is drawing on their canvas (socket.on...)
     // I suggest that you receive userId, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness
     // and then you call
-    socket.on('draw',function (room,userId,canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
+    socket.on('draw', function (room, userId, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
         let ctx0 = canvas[0].getContext('2d');
         drawOnCanvas(ctx0, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness);
         //DOESN'T WORK.DON'T KNOW WHY.
