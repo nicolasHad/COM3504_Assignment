@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title><%= title %></title>
     <script src="/socket.io/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,9 +12,23 @@
     <script src="/javascripts/index.js"></script>
     <script src="/javascripts/canvas.js"></script>
     <script src="/javascripts/database.js" type="module"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/knowledge/kgsearch/widget/1.0/widget.min.css">
+
+    <style>
+        .kge-search-picker {
+            width: <DROPDOWN_MENU_WIDTH>;
+        }
+    </style>
+
+    <script type="text/javascript" src="https://www.gstatic.com/knowledge/kgsearch/widget/1.0/widget.min.js"></script>
+
 </head>
 <body onload="init()">
-
+<header>
+    <%- include('./navbar.ejs') %>
+</header>
+<main>
 <div class="center" id="center">
     <h3 class="mb-4">Stories</h3>
     <a href="/createStory" class="btn btn-success">New Story</a>
@@ -41,8 +56,6 @@
     </form>
 </div>
 
-<button id="view_history" onclick="listAllVisitedRooms()">History</button>
-
 <div class="offline_div" id="offline_div" style="display: none">You are offline</div>
 
 <div id="chat_interface" style="display: none">
@@ -51,6 +64,39 @@
     </div>
     <button class="canvas-clear">Clear Canvas</button>
     </p>
+
+    <h1>Annotate or Draw</h1>
+
+    <form id = 'kgform' action="/action_page.php">
+        <p>Please select your favorite Web language:</p>
+        <input type="radio" name="pen_selection" id="annotate" value="annotate">Annotate<br>
+        <input type="radio" name="pen_selection" id="draw" value="draw" checked >Draw<br>
+    </form>
+
+
+    <h1>Search the Knowledge Graph</h1>
+    <div class="myRow" id="typeForm">
+        <label for="myType">Type: </label><input type="text" id="myType">
+        <button onclick="widgetInit()">Set type</button>
+    </div>
+    <div class="myRow" id='widget' style="display: none">
+        <label for="myInput">Search for: </label><input type="text" id="myInput">
+        <div class="myRow" id="typeSet"></div>
+    </div>
+    <div>
+        <div class='resultPanel' id="resultPanel" style="display: none">
+            <h3 id="resultName"></h3>
+            <h4 id="resultId"></h4>
+            <div id="resultDescription"></div>
+            <div>
+                <a id="resultUrl" target="_blank">
+                    Link to Webpage
+                </a>
+            </div>
+        </div>
+    </div>
+
+
     <div style="width: 100%; height: 50vh">
             <img id="image" height="100%" >
             <canvas  id="canvas" ></canvas>
@@ -70,7 +116,9 @@
     </div>
 </div>
 
-<div id="results" style="margin-top:30px"></div>
 
+
+<div id="results" style="margin-top:30px"></div>
+</main>
 </body>
 </html>

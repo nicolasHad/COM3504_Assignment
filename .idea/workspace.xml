@@ -4,7 +4,12 @@
     <list default="true" id="3f0ddc10-a7bc-4336-8572-9a1005491480" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/javascripts/canvas.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/canvas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/socket.io/socket-io.js" beforeDir="false" afterPath="$PROJECT_DIR$/socket.io/socket-io.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stylesheets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.ejs" afterDir="false" />
+    </list>
+    <list id="7c93a8b7-add9-4125-8396-61fe87f7b1fb" name="Changes by aca19nh" comment="">
+      <change beforePath="$PROJECT_DIR$/public/javascripts/canvas.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/canvas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/javascripts/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,6 +28,26 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/public/javascripts/canvas.js">
+      <ranges>
+        <range start1="22" end1="22" start2="22" end2="27" changelist="7c93a8b7-add9-4125-8396-61fe87f7b1fb" />
+        <range start1="25" end1="25" start2="30" end2="31" changelist="3f0ddc10-a7bc-4336-8572-9a1005491480" />
+        <range start1="38" end1="38" start2="44" end2="48" changelist="7c93a8b7-add9-4125-8396-61fe87f7b1fb" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/views/index.ejs">
+      <ranges>
+        <range start1="3" end1="3" start2="3" end2="4" changelist="3f0ddc10-a7bc-4336-8572-9a1005491480" />
+        <range start1="13" end1="13" start2="14" end2="25" changelist="7c93a8b7-add9-4125-8396-61fe87f7b1fb" />
+        <range start1="15" end1="16" start2="27" end2="31" changelist="3f0ddc10-a7bc-4336-8572-9a1005491480" />
+        <range start1="43" end1="45" start2="58" end2="58" changelist="7c93a8b7-add9-4125-8396-61fe87f7b1fb" />
+        <range start1="53" end1="53" start2="66" end2="99" changelist="7c93a8b7-add9-4125-8396-61fe87f7b1fb" />
+        <range start1="71" end1="71" start2="117" end2="119" changelist="7c93a8b7-add9-4125-8396-61fe87f7b1fb" />
+        <range start1="73" end1="74" start2="121" end2="122" changelist="3f0ddc10-a7bc-4336-8572-9a1005491480" />
+      </ranges>
+    </file>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -39,6 +64,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../main/COM3504_Assignment" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="ts.external.directory.path" value="C:\Users\Nicolas\AppData\Local\JetBrains\WebStorm 2021.3.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -58,6 +84,8 @@
       <workItem from="1650733872170" duration="14476000" />
       <workItem from="1650820116234" duration="3276000" />
       <workItem from="1652120436284" duration="10223000" />
+      <workItem from="1652279948690" duration="7310000" />
+      <workItem from="1652630483494" duration="3103000" />
     </task>
     <servers />
   </component>

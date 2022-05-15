@@ -21,8 +21,14 @@ async function initCanvas(sckt, imageUrl) {
     let ctx = cvx.getContext('2d');
     img.src = imageUrl;
 
+    let penSelection = document.getElementById('annotate').checked;
+
+
+
+
     // event on the canvas when the mouse is on it
     canvas.on('mousemove mousedown mouseup mouseout', async function (e) {
+        penSelection = document.getElementById('annotate').checked;
         prevX = currX;
         prevY = currY;
         currX = e.clientX - canvas.position().left;
@@ -36,6 +42,10 @@ async function initCanvas(sckt, imageUrl) {
             flag = false;
             if (e.type==='mouseup')
                 socket.emit('chat',roomNo, name, ' has finished drawing.');
+                socket.emit('chat',roomNo, name, penSelection);
+                if (penSelection)
+                    showKGForm();
+
         }
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
