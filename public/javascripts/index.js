@@ -137,7 +137,7 @@ async function loadStoryData(title,forceReload){
 
 function addToResults(dataR) {
     if (document.getElementById('results') != null) {
-        const row = document.createElement('div');
+       /* const row = document.createElement('div');
         // appending a new row
         document.getElementById('results').appendChild(row);
         // formatting the row by applying css classes
@@ -151,7 +151,42 @@ function addToResults(dataR) {
             "<div class='col-sm'>" + dataR.author + "</div>" +
             "<div class='col-sm'>" + dataR.title + "</div>" +
             "<div class='col-sm'>" + dataR.description + "</div>" +
-            "<div class='col-sm'></div></div></div>";
+            "<div class='col-sm'></div></div></div>";*/
+
+        let bodyElement=document.getElementById('results');
+        let cardElement = document.createElement('div');
+        let imageContainer = document.createElement('div');
+        let infoContainer = document.createElement('div');
+        let imageElement  = document.createElement('img');
+        let headingElement = document.createElement('h5');
+        let authorElement = document.createElement('h5');
+        let paragraphElement = document.createElement('p');
+        let btnElement = document.createElement('a');
+
+        cardElement.className = "storyCard";
+        imageContainer.className = "image-container";
+        infoContainer.className = "info-container"
+        imageElement.className = "image";
+        headingElement.className = "heading";
+        authorElement.className = "author";
+        paragraphElement.className = "paragraph";
+        btnElement.className = "btn";
+
+        imageElement.src=dataR.imageUrl;
+        btnElement.setAttribute("href","#");
+        imageElement.setAttribute("alt","Image of story");
+
+        headingElement.innerText=dataR.title;
+        authorElement.innerText="By: "+dataR.author;
+        paragraphElement.innerText="About: "+dataR.description;
+        btnElement.innerText="Read";
+
+        bodyElement.appendChild(cardElement);
+        cardElement.append(imageContainer,infoContainer);
+
+        imageContainer.appendChild(imageElement);
+        infoContainer.append(headingElement,authorElement,paragraphElement,btnElement);
+
     }
 }
 
@@ -297,6 +332,33 @@ async function onSubmit(url) {
     }
     // const data = JSON.stringify($(this).serializeArray());
     sendAxiosQuery(url, data);
+    event.preventDefault();
+}
+
+
+function sendAxiosQuery_2(url, data) {
+    axios.post(url, data)
+        .then((dataR) => {// no need to JSON parse the result, as we are using
+            // we need to JSON stringify the object
+            //document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
+            console.log(dataR.data);
+            for (d of dataR.data){
+                addToResults(d);
+            }
+        })
+        .catch(function (response) {
+            alert(response);
+        })
+}
+
+async function onSubmit_2(url) {
+    var formArray= $("form").serializeArray();
+    var data={};
+    for (index in formArray){
+        data[formArray[index].name]= formArray[index].value;
+    }
+    // const data = JSON.stringify($(this).serializeArray());
+    sendAxiosQuery_2(url, data);
     event.preventDefault();
 }
 

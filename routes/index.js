@@ -27,17 +27,16 @@ router.get('/createStory', function(req, res, next) {
 
 
 router
-    .get('/home',function (req,res,next){
-      res.render('home');
-    })
-    .post('/home', story.getActiveStoryData);
-
-
-router
     .get('/getSelectedStoryData', function (req,res,next) {
         res.render('index',{ title: 'Image Browsing' });
     })
     .post('/getSelectedStoryData',story.getSelectedStoryData)
+
+router
+    .get('/getAllStoryData', function (req,res,next) {
+        res.render('stories');
+    })
+    .post('/getAllStoryData',story.getActiveStoryData)
 
 /* GET home page.
 router

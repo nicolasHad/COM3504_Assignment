@@ -27,14 +27,14 @@ exports.newStory = function (req, res) {
 }
 
 /**
- * Method for getting all active stories given a server request.
+ * Method for getting all stories given a server request.
  * @param req
  * @param res
  */
 exports.getActiveStoryData=function (req,res) {
 
     var query = Story.find();
-    query.select('title author');
+    query.select('title author description imageUrl');
     query.exec(function (err, stories) {
         if (err){
             console.log('Error in retrieving stories.');
