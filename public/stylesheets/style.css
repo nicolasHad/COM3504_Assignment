@@ -8,6 +8,7 @@
 
 html {
     background-color: var(--blue1);
+    height:100%;
 }
 
 body {
@@ -21,6 +22,7 @@ main {
 
     padding-left: 30px;
     padding-right: 30px;
+    padding-bottom: 30px;
 }
 a {
   color: #00B7FF;
@@ -60,7 +62,35 @@ a {
     text-align: center;
 }
 
-.topnav {
-    background: var(--blue3) !important;
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--blue3);
+    color: var(--white);
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: var(--white);
     text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.title {
+    font-weight: bold;
+    color: var(--yellow) !important;
+    text-decoration: none;
+}
+
+li a:hover:not(.title) {
+    background-color: var(--blue2);
+    text-decoration: none;
+    color: var(--yellow);
 }
