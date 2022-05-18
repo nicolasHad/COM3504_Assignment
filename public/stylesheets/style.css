@@ -1,7 +1,29 @@
-body {
-  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+:root {
+    --blue1: #A8DADC;
+    --blue2: #457B9D;
+    --blue3: #1D3557;
+    --white: #F1FAEE;
+    --yellow: #E9C46A;
 }
 
+html {
+    background-color: var(--blue1);
+    height:100%;
+}
+
+body {
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: auto !important; /* this will center the page */
+    background-color: var(--white) !important;
+    width:1000px;
+    overflow: scroll;
+}
+main {
+
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+}
 a {
   color: #00B7FF;
 }
@@ -36,15 +58,10 @@ a {
     background-color: rgba(255,0,0,.1);
 }
 .center {
-    border: 5px solid #FFFF00;
+    border: 5px solid var(--yellow);
     text-align: center;
 }
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: 0;
-}
 
 .storiesHtml{
     font-size: 10px;
@@ -111,4 +128,35 @@ a {
 
 }
 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--blue3);
+    color: var(--white);
+}
 
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: var(--white);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.title {
+    font-weight: bold;
+    color: var(--yellow) !important;
+    text-decoration: none;
+}
+
+li a:hover:not(.title) {
+    background-color: var(--blue2);
+    text-decoration: none;
+    color: var(--yellow);
+}
