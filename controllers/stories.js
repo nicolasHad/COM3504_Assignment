@@ -12,11 +12,12 @@ exports.newStory = function (req, res) {
         title: userData.authorTitle,
         description: userData.authorDescription,
         imageUrl: userData.image_url
+
     });
     console.log('received: ' + story);
 
     story.save()
-        .then ((results) => {
+        .then ((results) =>               {
             console.log(results._id);
             res.json(story);
         })

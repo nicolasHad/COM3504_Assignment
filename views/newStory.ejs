@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="/javascripts/index.js"></script>
     <script src="/javascripts/database.js" type="module"></script>
+    <script src="/javascripts/canvas.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
@@ -29,13 +31,44 @@
             <input type="text" id="authorDescription" name="authorDescription">
         </p>
         <p><label for="image_url"> Image URL: </label>
-            <input type="text" id="image_url" name="image_url">
+            <input type="text" id="image_url" name="image_url"><br>
+            <canvas id="imageCanvas"></canvas><br>
+
+            <button type="button" id="upload">upload</button>
+
         </p>
         <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" id="g"></p>
 
     </form>
+        <div>
+        </div>
     </div>
+    <div>
 
+        <script>
+            window.onload = function() {
+
+
+                const myCanvas = document.getElementById('imageCanvas');
+                const ctx = myCanvas.getContext('2d');
+                const url = document.getElementById("image_url")
+                const img = new Image;
+                const upload = document.getElementById('upload')
+                img.crossOrigin = 'anonymous'
+                console.log('hello')
+                console.log(url)
+                img.src = url
+                drawImageScaled(img, myCanvas, ctx)
+                upload.addEventListener("click", uploadImage)
+
+                function uploadImage() {
+                    const base64 = myCanvas.toDataURL();
+                    console.log(base64);
+                }
+            }
+        </script>
+
+    </div>
     </main>
 </body>
 </html>
