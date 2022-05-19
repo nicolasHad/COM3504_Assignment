@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "1.0.0",
+    "title": "COM3504 Assignment",
+    "description": "User management API",
+    "termsOfService": "http://api_url/terms/",
+    "contact": {
+      "name": "Power Puff Bois",
+      "email": "nhadsjisavvas1@shef.ac.uk"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/",
+      "description": "the only Local server"
+    }
+  ],
+  "paths": {
+  },
+  "components": {
+  }
+}
