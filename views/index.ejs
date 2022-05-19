@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <title><%= title %></title>
     <script src="/socket.io/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,24 +29,22 @@
     <%- include('./navbar.ejs') %>
 </header>
 <main>
-
-<div id="initial_form" style="display: block">
     <h1><%= title %></h1>
     <p>Please insert the id of the Room you want to Join, if you do not have a room id, click Generate Room</p>
+<div id="initial_form" style="display: block" class="form">
     <form onsubmit="return false;">
-        <p><label for="name"> Your name </label>
+        <p><label for="name"> Your name </label><br>
             <input type="text" id="firstname" name="firstname">
         </p>
-        <p><label for="story_title"> Story Title </label>
+        <p><label for="story_title"> Story Title </label><br>
             <input type="text" id="story_title" name="story_title">
         </p>
         <p>
-            <label for="roomNo"> Your room </label>
+            <label for="roomNo"> Your room </label><br>
             <input type="text" id="roomNo" name="roomNo">
             <button id="roomNoGenerator" onclick="generateRoom()">Generate Room</button>
         </p>
         <button id="connect" onclick="connectToRoom()">Connect</button>
-        <div id="roomhistory" style="margin-top:30px"></div>
     </form>
 </div>
 

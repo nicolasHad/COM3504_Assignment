@@ -16,8 +16,9 @@
     <%- include('./navbar.ejs') %>
 </header>
 <main>
-    <div id="initial_form" style="display: block">
     <h1>Create a story</h1>
+    <div id="initial_form" style="display: block" class="form">
+
     <form id = "xForm" onsubmit="onSubmit('/newStory')">
         <p><label for="authorName"> Your name </label>
             <input type="text" id="authorName" name="authorName">
@@ -31,7 +32,7 @@
         <p><label for="image_url"> Image URL: </label>
             <input type="text" id="image_url" name="image_url">
         </p>
-        <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" id="g"></p>
+        <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" id="submitbutton"></p>
 
     </form>
     </div>
