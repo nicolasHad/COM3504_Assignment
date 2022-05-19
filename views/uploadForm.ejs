@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title><%= title %></title>
+
+    <!-- External -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <!-- Internal -->
+    <script src="/javascripts/uploadForm.js"></script>
+
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<% include ./header %>
+
+<div class="container-fluid w-75 my-5">
+    <form class="row g-3" onsubmit="return false">
+        <!-- Basic Info -->
+        <div class="col-md-4">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" value="">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" value="">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="3" id="description"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <select class="form-select" aria-label="Select upload method" id="selectBox">
+                <option value="1">From internet</option>
+                <option value="2">From device</option>
+                <option value="3">From camera</option>
+            </select>
+        </div>
+
+        <!-- URL upload panel -->
+        <div id="urlPanel" class="mb-3">
+            <label class="form-label" >URL</label>
+            <input type="text" class="form-control" id="fromUrl" placeholder="Put the link here">
+        </div>
+
+        <!-- File upload panel -->
+        <div id="filePanel" class="mb-3">
+            <label for="formFile" class="form-label">Choose a file</label>
+            <input class="form-control" type="file" id="fromFile">
+        </div>
+
+        <!-- Camera upload panel -->
+        <div id="cameraPanel" class="mb-3">
+            <video id="previewVideo" class="m-2 w-100" autoplay></video>
+            <button id="shotBtn" class="btn btn-primary m-2">Shoot an image</button>
+            <canvas id="shotCanvas" class="m-2 w-100 bg-light bg-gradient"></canvas>
+        </div>
+
+        <!-- Submit -->
+        <div class="">
+            <button id="submitBtn" class="btn btn-primary" type="submit" onclick="upload()">Submit image</button>
+        </div>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</body>
+</html>
