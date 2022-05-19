@@ -9,7 +9,6 @@
     <script src="/javascripts/index.js"></script>
     <script src="/javascripts/database.js" type="module"></script>
     <script src="/javascripts/canvas.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
@@ -17,58 +16,59 @@
 <header>
     <%- include('./navbar.ejs') %>
 </header>
-<main>
-    <div id="initial_form" style="display: block">
-    <h1>Create a story</h1>
-    <form id = "xForm" onsubmit="onSubmit('/newStory')">
-        <p><label for="authorName"> Your name </label>
-            <input type="text" id="authorName" name="authorName">
-        </p>
-        <p><label for="authorTitle"> Title: </label>
-            <input type="text" id="authorTitle" name="authorTitle">
-        </p>
-        <p><label for="authorDescription"> Story Description: </label>
-            <input type="text" id="authorDescription" name="authorDescription">
-        </p>
-        <p><label for="image_url"> Image URL: </label>
-            <input type="text" id="image_url" name="image_url"><br>
-            <canvas id="imageCanvas"></canvas><br>
+    <main class="center">
+        <h1>Create a story</h1>
 
-            <button type="button" id="upload">upload</button>
-
-        </p>
-        <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" id="g"></p>
-
-    </form>
-        <div>
+        <!-- Drop down menu -->
+        <p>Select an uploading method</p>
+        <div class="dropDown">
+            <select class="form-select" aria-label="Select upload method" id="selection">
+                <option value="1">Local file</option>
+                <option value="2">Take a picture</option>
+                <br>
+            </select>
         </div>
-    </div>
-    <div>
-
-        <script>
-            window.onload = function() {
-
-
-                const myCanvas = document.getElementById('imageCanvas');
-                const ctx = myCanvas.getContext('2d');
-                const url = document.getElementById("image_url")
-                const img = new Image;
-                const upload = document.getElementById('upload')
-                img.crossOrigin = 'anonymous'
-                console.log('hello')
-                console.log(url)
-                img.src = url
-                drawImageScaled(img, myCanvas, ctx)
-                upload.addEventListener("click", uploadImage)
-
-                function uploadImage() {
-                    const base64 = myCanvas.toDataURL();
-                    console.log(base64);
-                }
-            }
-        </script>
-
-    </div>
+        <!-- Buttons for stream and snapshot-->
+        <div class="webRTC" style = "display:none" id = "web">
+            <div class="button-group">
+                <button id="start" type="button">Start live feed</button>
+                <button id="capture" type="button">Capture snapshot</button>
+                <button id="stop" type="button">Stop</button>
+            </div>
+        <!-- Live feed and canvas -->
+            <div class = "streamCanvas"></div>
+                <h3>Live camera</h3>
+                <video id="stream" width="200" height="160"></video>
+                <h3>Snapshot</h3>
+                <canvas hidden="hidden" id="captureCanvas" width="200" height="160" ></canvas>
+                <div id="snapshot"></div>
+            </div>
+        </div>
+        <!-- Input form -->
+        <div id="initial_form" style="display: block">
+            <form id = "xForm" onsubmit="onSubmit('/newStory')">
+                <p><label for="authorName"> Your name </label><br>
+                    <input type="text" id="authorName" name="authorName">
+                </p>
+                <p><label for="authorTitle"> Title: </label>
+                    <br>
+                    <input type="text" id="authorTitle" name="authorTitle">
+                </p>
+                <p><label for="authorDescription"> Story Description: </label><br>
+                    <input type="text" id="authorDescription" name="authorDescription">
+                </p>
+                <!-- Upload image from local file -->
+                <div class="local" id = "fromLocal">
+                    <p>
+                        Select image: <br><input type="file" onchange="uploadAndConvert(this)" id = "image" accept=".png, .jpeg" id="g"/><br><br>
+                    </p>
+            </div>
+                <input type="text" id="image_url" name="converted" hidden="hidden" >
+            <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" ></p>
+        </form>
+            <!-- Script is called after the dom is painted-->
+            <script src="/javascripts/image.js"></script>
+        </div>
     </main>
 </body>
 </html>

@@ -270,6 +270,7 @@ async function storeStoryINIdb() {
     let desc=document.getElementById('authorDescription').value;
     let url=document.getElementById('image_url').value;
     storeCachedStory(author,title,desc,url);
+    alert("Successfully created story");
 }
 
 //Called every time the user connects to a room.
