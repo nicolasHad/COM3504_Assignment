@@ -11,7 +11,7 @@ exports.newStory = function (req, res) {
         author: userData.authorName,
         title: userData.authorTitle,
         description: userData.authorDescription,
-        imageUrl: userData.image_url
+        imageUrl: userData.converted
 
     });
     console.log('received: ' + story);
