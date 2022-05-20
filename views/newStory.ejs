@@ -16,11 +16,12 @@
 <header>
     <%- include('./navbar.ejs') %>
 </header>
-    <main class="center">
+    <main>
         <h1>Create a story</h1>
 
         <!-- Drop down menu -->
-        <p>Select an uploading method</p>
+        <div id="initial_form" style="display: block" class="form">
+            <p>Select an uploading method</p>
         <div class="dropDown">
             <select class="form-select" aria-label="Select upload method" id="selection">
                 <option value="1">Local file</option>
@@ -28,7 +29,9 @@
                 <br>
             </select>
         </div>
+        </div>
         <!-- Buttons for stream and snapshot-->
+        <div id="initial_form" style="display: block" class="form">
         <div class="webRTC" style = "display:none" id = "web">
             <div class="button-group">
                 <button id="start" type="button">Start live feed</button>
@@ -40,12 +43,14 @@
                 <h3>Live camera</h3>
                 <video id="stream" width="200" height="160"></video>
                 <h3>Snapshot</h3>
+            <div class="center_snap">
                 <canvas hidden="hidden" id="captureCanvas" width="200" height="160" ></canvas>
                 <div id="snapshot"></div>
             </div>
+            </div>
         </div>
         <!-- Input form -->
-        <div id="initial_form" style="display: block">
+        <div id="initial_form" style="display: block" class="form"> <br>
             <form id = "xForm" onsubmit="onSubmit('/newStory')">
                 <p><label for="authorName"> Your name </label><br>
                     <input type="text" id="authorName" name="authorName">
@@ -63,12 +68,13 @@
                         Select image: <br><input type="file" onchange="uploadAndConvert(this)" id = "image" accept=".png, .jpeg" id="g"/><br><br>
                     </p>
             </div>
-                <input type="text" id="image_url" name="converted" hidden="hidden" >
+                <input type="text" id="image_url" name="converted" hidden="hidden">
             <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" ></p>
         </form>
             <!-- Script is called after the dom is painted-->
             <script src="/javascripts/image.js"></script>
         </div>
+        <br>
     </main>
 </body>
 </html>

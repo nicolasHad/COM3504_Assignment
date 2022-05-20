@@ -29,10 +29,10 @@
     <%- include('./navbar.ejs') %>
 </header>
 <main>
+<div id="initial_form" style="display: block">
     <h1><%= title %></h1>
     <p>Please insert the id of the Room you want to Join, if you do not have a room id, click Generate Room</p>
-<div id="initial_form" style="display: block" class="form">
-    <form onsubmit="return false;">
+    <form onsubmit="return false;" class="form">
         <p><label for="name"> Your name </label><br>
             <input type="text" id="firstname" name="firstname">
         </p>
