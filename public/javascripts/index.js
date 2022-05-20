@@ -222,6 +222,8 @@ function addToResults(dataR) {
         let authorElement = document.createElement('h5');
         let paragraphElement = document.createElement('p');
         let btnElement = document.createElement('a');
+        var br = document.createElement("br");
+
 
         let formId = "form"+ Math.random().toString();
         let formElement = document.createElement('form');
@@ -262,6 +264,7 @@ function addToResults(dataR) {
         formElement.appendChild(descriptionInput);
         formElement.appendChild(imageInput);
         formElement.appendChild(btn);
+        formElement.appendChild(br);
 
         bodyElement.appendChild(formElement);
         titleInput.style.display  = 'none';
@@ -270,7 +273,6 @@ function addToResults(dataR) {
         imageInput.style.display  = 'none';
         //document.getElementById(formId).style.display = "none";
 
-
         cardElement.className = "storyCard";
         imageContainer.className = "image-container";
         infoContainer.className = "info-container"
@@ -278,7 +280,6 @@ function addToResults(dataR) {
         headingElement.className = "heading";
         authorElement.className = "author";
         paragraphElement.className = "paragraph";
-        btnElement.className = "btn";
         imageElement.src=dataR.imageUrl;
         imageElement.setAttribute("alt","Image of story");
         headingElement.innerText=dataR.title;
@@ -299,6 +300,7 @@ async function storeStoryINIdb() {
     let desc=document.getElementById('authorDescription').value;
     let url=document.getElementById('image_url').value;
     storeCachedStory(author,title,desc,url);
+    alert("Successfully created story");
 }
 
 //Called every time the user connects to a room.
@@ -419,8 +421,6 @@ function hideLoginInterface(room, userId) {
 function sendAxiosQuery(url, data) {
     axios.post(url, data)
         .then((dataR) => {// no need to JSON parse the result, as we are using
-            // we need to JSON stringify the object
-            document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
         })
         .catch(function (response) {
             alert(response);

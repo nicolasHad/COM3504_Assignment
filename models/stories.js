@@ -21,6 +21,8 @@ const story = new Schema({
         imageUrl: {
             type: String
         }
-    });
+    },{
+        timestamps:true
+});
 
 module.exports = mongoose.model('Story', story);

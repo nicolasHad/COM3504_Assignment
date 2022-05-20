@@ -43,14 +43,5 @@ router
         res.render('individual_storyPage', {title: req.body.title, author:req.body.author, description:req.body.description, imageUrl:req.body.imageUrl});
     })
 
-/* GET home page.
-router
-    .get('/insert', function(req, res, next) {
-      res.render('insert', {title: 'Test'});
-    })
-
-    .post('/insert', stories.insert);
-module.exports = router; */
-
 module.exports = router;
 

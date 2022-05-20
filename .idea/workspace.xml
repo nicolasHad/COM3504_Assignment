@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3f0ddc10-a7bc-4336-8572-9a1005491480" name="Changes" comment="">
+    <list default="true" id="3f0ddc10-a7bc-4336-8572-9a1005491480" name="Changes" comment="Added dates in schema">
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/stylesheets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/navbar.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/navbar.ejs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/newStory.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/newStory.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/javascripts/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+
     </list>
     <list id="7c93a8b7-add9-4125-8396-61fe87f7b1fb" name="Changes by aca19nh" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,10 +50,15 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../main/COM3504_Assignment" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/views" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="ts.external.directory.path" value="C:\Users\Nicolas\AppData\Local\JetBrains\WebStorm 2021.3.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Nicolas\Desktop\New folder\COM3504_Assignment\views" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -61,18 +76,52 @@
       <workItem from="1650733872170" duration="14476000" />
       <workItem from="1650820116234" duration="3276000" />
       <workItem from="1652120436284" duration="10223000" />
-<<<<<<< HEAD
-      <workItem from="1652304584774" duration="9312000" />
-      <workItem from="1652703865295" duration="301000" />
-=======
       <workItem from="1652279948690" duration="7310000" />
       <workItem from="1652630483494" duration="3103000" />
       <workItem from="1652658705812" duration="4914000" />
->>>>>>> 6d19f1376f37ca1dbe0a9b4934d4c27b5ff72d96
+      <workItem from="1652696174134" duration="155000" />
+      <workItem from="1652707000587" duration="4490000" />
+      <workItem from="1652870575355" duration="8078000" />
+      <workItem from="1652890541672" duration="68000" />
+      <workItem from="1652890939255" duration="76000" />
+      <workItem from="1652891024999" duration="9102000" />
+      <workItem from="1652903885672" duration="1232000" />
+      <workItem from="1652959532365" duration="183000" />
+      <workItem from="1652959729534" duration="903000" />
+      <workItem from="1652960646659" duration="17840000" />
+<<<<<<< HEAD
+      <workItem from="1653001420294" duration="4389000" />
+      <workItem from="1653043821496" duration="1341000" />
+=======
+      <workItem from="1653046171781" duration="567000" />
+>>>>>>> 7355097436a29a1e54e799e03457ceea5bac9ea2
     </task>
+    <task id="LOCAL-00001" summary="Added dates in schema">
+      <created>1652891210535</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1652891210535</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added dates in schema" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added dates in schema" />
   </component>
 </project>
