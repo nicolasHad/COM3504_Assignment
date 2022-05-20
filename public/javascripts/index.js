@@ -220,6 +220,7 @@ function addToResults(dataR) {
         let authorElement = document.createElement('h5');
         let paragraphElement = document.createElement('p');
         let btnElement = document.createElement('a');
+        var br = document.createElement("br");
 
 
         let formId = "form"+ Math.random().toString();
@@ -261,6 +262,7 @@ function addToResults(dataR) {
         formElement.appendChild(descriptionInput);
         formElement.appendChild(imageInput);
         formElement.appendChild(btn);
+        formElement.appendChild(br);
 
         bodyElement.appendChild(formElement);
         titleInput.style.display  = 'none';

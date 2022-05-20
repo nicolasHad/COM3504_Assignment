@@ -288,3 +288,22 @@ button:hover {
 #connect {
     float: right;
 }
+
+#individualimage{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 500px;
+}
+
+#title_indiv{
+    display: inline;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#author_indiv{
+    display: inline;
+    font-size: 20px;
+    font-style: italic;
+}
