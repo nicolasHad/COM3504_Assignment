@@ -1,4 +1,4 @@
-# COM3504_Assignment
+# COM3504_Assignment - Power Puff Bois
 ## Initial setup
 
  * Navigate to the main project directory
