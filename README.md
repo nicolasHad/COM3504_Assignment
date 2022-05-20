@@ -14,8 +14,6 @@
  * Input the room number if known or generate a new room
  * Click the "connect" button to connect to a room
  * To go back to the home page press the "aNOTEate" underlined link
- 
-<img width="1440" alt="Screenshot 2022-05-20 at 20 30 57" src="https://user-images.githubusercontent.com/62940752/169598697-24a5e328-84d6-4d30-81fc-157b4084e1fe.png">
 
  ## Creating a new story
  
@@ -26,7 +24,6 @@
  * An alert should confirm the correct creation of the story
  * To go back to the home page press the "aNOTEate" underlined link
  
-<img width="1440" alt="Screenshot 2022-05-20 at 20 29 08" src="https://user-images.githubusercontent.com/62940752/169598482-53b9bac3-35f6-4ca0-8c63-9e2df31e15f5.png">
 
  ## Chat and annotations
  
@@ -39,15 +36,14 @@
 
  ## Viewing stories
 
- * From the homepage press the "All Stories" button on the top right
+ * From the homepage view story list by choosing the all stories options on the drop down menu
  * To view an individual story press the "read" button on the story card
  * To go back to the home page press the "aNOTEate" underlined link
 
- <img width="800" alt="Screenshot 2022-05-20 at 20 27 22" src="https://user-images.githubusercontent.com/62940752/169598294-7eecb1ce-fbf5-4091-bae7-dc3ac1e1c3fd.png">
  
  ** Offline use
  
  * The web app will work offline, maintaing most of its functionalies
  * Enter a room using the same process 
- * View story list by clicking the All Stories button
+ * View story list by choosing the all stories options on the drop down menu
 
