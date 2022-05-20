@@ -15,20 +15,19 @@ stop.addEventListener( "click", stopStream);
 //This function allows for local file upload and base64 conversion
 function uploadAndConvert(element) {
     var file = element.files[0];
-    if (file.size > 100000){
+    if (file.size > 70000){
         alert("File is too big!");
     }
-
     var reader = new FileReader();
     reader.onloadend = function() {
         const base64Field = document.getElementById("image_url")
-        var base64result = reader.result.split(',')[1];
+        var base64result = reader.result;
         base64Field.value = base64result
     }
     reader.readAsDataURL(file);
 }
 
-//Start Streaming
+//Start Streaming returns error if it cannot access the device
 function liveStream() {
     var media = 'mediaDevices' in navigator;
     if( media && null == streamingCamera ) {

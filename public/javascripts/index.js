@@ -26,6 +26,19 @@ function init() {
     else {
         console.log('This browser doesn\'t support IndexedDB');
     }
+    //Checks if browser supports service workers and registers them
+    //Returns an error if not
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('./service-worker.js')
+            .then(function(serviceWorker) {
+                console.log('Service Worker Registered');
+                serviceWorker.update();
+            }), function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+        };
+    }
 
     let roomList=JSON.parse(localStorage.getItem('roomList'));
     console.log(roomList);
