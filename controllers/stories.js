@@ -1,21 +1,27 @@
 let Story = require('../models/stories');
 
-//This function gets the data inputted in the form and sends it to the database
+/**
+ * This function takes the data from the input fields and saves it into
+ * the database
+ * @param req
+ * @param res
+ */
 exports.newStory = function (req, res) {
     let userData = req.body;
     if (userData == null) {
         res.status(403).send('No data sent!')
     }
-
+    //Getting information from the form fields
     let story = new Story({
         author: userData.authorName,
         title: userData.authorTitle,
         description: userData.authorDescription,
-        imageUrl: userData.converted
+        imageUrl: userData.converted,
+        date: Date()
 
     });
     console.log('received: ' + story);
-
+    //Saves the data into mongoDB
     story.save()
         .then ((results) =>               {
             console.log(results._id);
