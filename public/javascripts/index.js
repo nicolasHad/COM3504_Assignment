@@ -12,6 +12,8 @@ const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
  * called by <body onload>
  * it initialises the interface and the expected socket messages
  * plus the associated actions
+ * Also registers the service worker and throws an error in case the
+ * browser does not support service workers
  */
 
 function init() {
@@ -26,6 +28,19 @@ function init() {
     }
     else {
         console.log('This browser doesn\'t support IndexedDB');
+    }
+    //Checks if browser supports service workers and registers them
+    //Returns an error if not
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('./service-worker.js')
+            .then(function(serviceWorker) {
+                console.log('Service Worker Registered');
+                serviceWorker.update();
+            }), function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+        };
     }
 
     let roomList=JSON.parse(localStorage.getItem('roomList'));

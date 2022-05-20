@@ -11,22 +11,35 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+//Variable declarations
 let cache= null;
 let dataCacheName = 'storiesData';
 let cacheName = 'stories';
 let filesToCache = [
-    '/',
-    'javascripts/app.js',
-    'javascripts/index.js',
-    'javascripts/canvas.js',
-    '/stylesheets/style.css',
+    //Standard libraries
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js",
+    //Pages
+    "/",
+    "/createStory",
+    "/generateRoom",
+    "visitedRooms",
+    "/getSelectedStoryData",
+    "/getAllStoryData",
+    //'visitedRooms',
+    //Scripts
+    "/javascripts/app.js",
+    "/javascripts/index.js",
+    "/javascripts/canvas.js",
+    "/javascripts/image.js",
+    "/javascripts/database.js",
+    "/stylesheets/style.css",
 ];
 
-
 /**
- * installation event: it adds all the files to be cached
-*/
+ * Installs the service worker
+ */
 self.addEventListener('install', function (e) {
     console.log('[ServiceWorker] Install');
     e.waitUntil(
@@ -38,29 +51,31 @@ self.addEventListener('install', function (e) {
     );
 });
 
-
 /**
- * activation of service worker: it removes all cached files if necessary
+ * activation of service worker: it removes all cashed files if necessary
  */
-/*
-self.addEventListener('install', e => {
-    console.log('Installed');
-
+self.addEventListener('activate', function (e) {
+    console.log('[ServiceWorker] Activate');
     e.waitUntil(
-        caches
-            .open(cacheName)
-            .then(cache => {
-                console.log("Caching files");
-                cache.addAll(filesToCache);
-            })
-            .then(() =>self.skipWaiting())
+        caches.keys().then(function (keyList) {
+            return Promise.all(keyList.map(function (key) {
+                if (key !== cacheName && key !== dataCacheName) {
+                    console.log('[ServiceWorker] Removing old cache', key);
+                    return caches.delete(key);
+                }
+            }));
+        })
+    );
+    return self.clients.claim();
+});
+/**
+ * This function is called when a fetch request is received by the service worker
+ */
+self.addEventListener('fetch', function (e) {
+    e.respondWith(
+        fetch(e.request).catch(function(){
+            return caches.match(e.request);
+        })
     );
 });
-*/
-
-
-self.addEventListener('activate', e => {
-    console.log('Activated');
-});
-
 

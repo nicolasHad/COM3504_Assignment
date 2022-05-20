@@ -1,8 +1,11 @@
+//Constant declarations
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-
-// Defines the object schema for the database
+/**
+ * Defines schema of stories following mongoose structure
+ * @type {module:mongoose.Schema<any, Model<any, any, any, any>, {}, {}>}
+ */
 const story = new Schema({
 
         author: {
@@ -19,10 +22,13 @@ const story = new Schema({
             required: true
         },
         imageUrl: {
-            type: String
+            type: String,
+            required: true
+        },
+        date: {
+            type: String,
+            required: true
         }
-    },{
-        timestamps:true
-});
+    });
 
 module.exports = mongoose.model('Story', story);

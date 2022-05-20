@@ -1,18 +1,20 @@
+//Constant declarations
 const mongoose = require('mongoose');
 const Story = require('../models/stories');
 
-
-// Just a function to hardcode some objects in the database
+/**
+ * Function which hardcodes some objects in mongo db and saves them
+ */
 exports.init = function() {
-
+    //Creating a story
     let story = new Story({
         author: 'Bean',
         title: '1',
         description: 'Hello',
-        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg'
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg',
+        date: Date()
     });
-    // console.log('dob: '+character.dgob);
-
+    //Saving a story
     story.save()
         .then ((results) => {
             console.log("object created in init: "+ JSON.stringify(results));
