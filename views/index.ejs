@@ -31,7 +31,7 @@
     <%- include('./navbar.ejs') %>
 </header>
 <main>
-    <select name="selection_mainPage" id="selection_mainPage" onchange="loadData()">
+    <select name="selection_mainPage" id="selection_mainPage" onchange="onSubmit_2('/getAllStoryData')">
         <option value="Join a room">Join a room</option>
         <option value="All stories">All stories</option>
     </select>
