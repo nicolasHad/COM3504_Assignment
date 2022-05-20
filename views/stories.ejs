@@ -12,9 +12,14 @@
     <script src="/javascripts/canvas.js"></script>
     <script src="/javascripts/database.js" type="module"></script>
 </head>
-<body class="storiesBody" onload="onSubmit_2('/getAllStoryData')">
-<h1 class="storyListHeader">List of stories</h1>
-<div id="results" style="margin-top:30px"></div>
 
+
+<body onload="onSubmit_2('/getAllStoryData')">
+<header>
+    <%- include('./navbar.ejs') %>
+</header>
+<main class="storiesBody">
+<div id="results" style="margin-top:30px"></div>
+</main>
 </body>
 </html>

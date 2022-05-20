@@ -8,15 +8,18 @@
 
 html {
     background-color: var(--blue1);
+    overflow-y: scroll;
     height:100%;
 }
 
 body {
-  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
     margin: auto !important; /* this will center the page */
     background-color: var(--white) !important;
+    position: relative;
+    height: auto;
     width:1000px;
-    overflow: scroll;
+    min-height: 100% !important;
 }
 main {
 
@@ -62,6 +65,16 @@ a {
     text-align: center;
 }
 
+.logo-img{
+    height: 100%;
+}
+
+.logo{
+    width: 30px;
+    margin-top: -20px;
+    margin-rigt: 2px;
+    margin-bottom: -20px;
+}
 
 .storiesHtml{
     font-size: 10px;
@@ -70,25 +83,31 @@ a {
 .storiesBody{
     height: 100vh;
     display: flex;
+    justify-content: center;
 
 }
 
 .storyCard{
-    width: 60rem;
+    width: 600px;
     font-family: "Open Sans", sans-serif;
     background-color: #f4f4f4;
     box-shadow: 3px 3px 1rem rgba(0,0,0,.1);
     margin-bottom: 20px;
 }
 
-.image-container{
-    height: 18rem;
+.image-container {
+    max-width: 600px;
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.image-container > img {
+    width: 600px;
 }
 
 .image{
     width: 100%;
     height: 100%;
-    object-fit: cover;
 }
 
 .info-container{
@@ -124,10 +143,6 @@ a {
     transition: background-color .5s;
 }
 
-.storyListHeader{
-
-}
-
 ul {
     list-style-type: none;
     margin: 0;
@@ -159,4 +174,74 @@ li a:hover:not(.title) {
     background-color: var(--blue2);
     text-decoration: none;
     color: var(--yellow);
+}
+
+header {
+    font-size: 14px;
+}
+
+input[type=text], select, textarea {
+    width: 100%;
+    height: 45px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+.form{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+}
+
+button {
+    background-color: var(--blue1);
+
+    height: 45px;
+    min-width: 100px;
+    color: var(--blue3);
+    border-radius: 5px !important;
+    border: 2px solid var(--blue1);
+
+}
+
+#submitbutton {
+    background-color: var(--blue1);
+    color: var(--blue3);
+    border-radius: 5px !important;
+    border: 2px solid var(--blue1);
+
+}
+
+button:hover {
+    background-color: var(--blue2);
+    color: var(--yellow);
+    border-radius: 5px !important;
+    border: 2px solid var(--blue2);
+
+}
+
+#roomNo{
+    padding-right: 30px;
+    width: 70%;
+}
+
+#roomNoGenerator {
+    margin-left: -9px !important;
+    width: 30%;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
+    margin-top: 6px !important;
+    margin-bottom: 16px;
+    padding-top: 2px;
+}
+
+#connect {
+    float: right;
 }

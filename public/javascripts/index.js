@@ -404,7 +404,6 @@ function hideLoginInterface(room, userId) {
 function sendAxiosQuery(url, data) {
     axios.post(url, data)
         .then((dataR) => {// no need to JSON parse the result, as we are using
-            // we need to JSON stringify the object
         })
         .catch(function (response) {
             alert(response);
