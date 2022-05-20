@@ -35,6 +35,7 @@ let filesToCache = [
     "/javascripts/image.js",
     "/javascripts/database.js",
     "/stylesheets/style.css",
+    "/images/logo.png",
 ];
 
 /**
