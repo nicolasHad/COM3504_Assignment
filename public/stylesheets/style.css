@@ -307,3 +307,32 @@ button:hover {
     font-size: 20px;
     font-style: italic;
 }
+
+#canvas-left {
+    float: right;
+    width: 50%;
+}
+
+#canvas-right {
+    float: left;
+    width: 50%;
+}
+
+#image{
+    width: 90%;
+}
+
+#canvas{
+    width: 90%;
+}
+
+table, th, td{
+    border: 2px solid;
+    border-color: var(--blue2);
+    border-collapse: collapse;
+}
+
+#history{
+    border: 2px solid;
+    border-color: var(--blue2);
+}
