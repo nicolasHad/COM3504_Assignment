@@ -102,9 +102,9 @@ a {
     font-size: 10px;
 }
 
-.storiesBody{
+#storiesBody{
     background-color: white !important;
-    display: flex;
+    display: block;
     justify-content: center;
     height: auto;
 }

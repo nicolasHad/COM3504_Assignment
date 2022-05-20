@@ -41,6 +41,7 @@ class DrawnAnnotation{
 import * as idb from './idb/index.js';
 let db;
 
+// Declare the names of the db name and the object stores.
 const STORIES_DB_NAME = 'db_stories_1';
 const STORIES_STORE_NAME = 'store_stories';
 const ANNOTATIONS_STORE_NAME = 'store_annotations';
@@ -88,9 +89,13 @@ async function initDatabase(){
 window.initDatabase=initDatabase;
 
 /**
- * The function which stores the data that have to be cached(stories and annotations)
- * This function is going to be called when the stories are retrieved from the mongo DB to immediately cache them.
- * I assume it's also going to be called when an annotation is added to a story.
+ * The function which stores the story data that have to be cached
+ * This function is going to be called when the stories are added from the mongo DB to immediately cache them.
+ * @returns {Promise<void>}
+ * @param author
+ * @param title
+ * @param description
+ * @param imageUrl
  * @returns {Promise<void>}
  */
 async function storeCachedStory(author,title,description,imageUrl){
@@ -101,6 +106,7 @@ async function storeCachedStory(author,title,description,imageUrl){
         await initDatabase();
     if(db) {
         try{
+            // Initialise the transaction and put the data in the store.
             var store_n = STORIES_STORE_NAME;
             let tx = await db.transaction(store_n, 'readwrite');
             let store = await tx.objectStore(store_n);
@@ -115,13 +121,53 @@ async function storeCachedStory(author,title,description,imageUrl){
             console.log('Added item to the store.', JSON.stringify(author+','+title+','+description+','+imageUrl));
         }
         catch (error) {
-            //localStorage.setItem(JSON.stringify(object));
             console.log(error);
-        };
+        }
     }
 }
 window.storeCachedStory = storeCachedStory;
 
+/**
+ * Method for getting all stories stored in indexedDB.
+ * @returns {Promise<*[]|*>}
+ */
+async function getAllCachedStories() {
+    if (!db)
+        await initDatabase();
+    if (db) {
+        try {
+            var store_stories = STORIES_STORE_NAME;
+
+            //Define different transactions and get the cached stories.
+            let tx_stories = await db.transaction(store_stories,'readonly');
+            let story_store = await tx_stories.objectStore(store_stories);
+            let readingList_stories = await story_store.getAll();
+
+            await tx_stories.complete;
+
+            let finalResults=[];
+            if(readingList_stories && readingList_stories.length>0){
+                let max;
+                for (let elem of readingList_stories)
+                    if(!max || elem.date>max.date)
+                        max = elem;
+                if (max)
+                    finalResults.push(max);
+                return finalResults;
+            }
+        } catch (e) {
+            console.log(e);
+            return e;
+        }
+    }
+}
+window.getAllCachedStories = getAllCachedStories;
+
+/**
+ * Method for storing annotation data
+ * @param object the annotation object.
+ * @returns {Promise<void>}
+ */
 async function storeCachedAnnotation(object){
     console.log('Inserting: '+JSON.stringify(object));
     let id = Math.random();
@@ -132,6 +178,7 @@ async function storeCachedAnnotation(object){
             var store_n = ANNOTATIONS_STORE_NAME;
             let tx = await db.transaction(store_n, 'readwrite');
             let store = await tx.objectStore(store_n);
+            // Depending on the type of annotation, call the .put method to store it.
             if(object.body != null) {
                 await store.put({
                     id: id,
@@ -181,14 +228,12 @@ async function storeCachedAnnotation(object){
 }
 window.storeCachedAnnotation = storeCachedAnnotation;
 
-/**
- *
- */
 
-// Initial version, need to redefine it to retrieve data for both stories and their annotations(as soon as I put stories in the same store as their stories.)
-// 2 ways  of doing this. I can either stick to using 2 different stores for stories and annotations(and every time a story is to be
-// retrieved using author,title as composite 'PK' I just retrieve the corresponding annotations as well.Second option is to store
-// stories and their annotations in the same store, and retrieve them altogether.
+/**
+ * Method for retrieving story data from indexedDB given a title.
+ * @param title
+ * @returns {Promise<*[]|*>}
+ */
 async function getCachedStoryData(title) {
     if (!db)
         await initDatabase();
@@ -239,8 +284,9 @@ async function getCachedStoryData(title) {
 }
 window.getCachedStoryData = getCachedStoryData;
 
+
 /**
- * Returns all cached annottations(written and drawn) for a room.
+ * Returns all cached annottations(written, drawn and KG annotations) for a room.
  * @param room
  * @param story
  * @returns {Promise<*[]|*>}
@@ -279,7 +325,14 @@ async function getCachedAnnotationData(room,story){
 window.getCachedAnnotationData = getCachedAnnotationData;
 
 
+/**
+ * Method for deleting the annotations of a specific room,story pair.
+ * @param room
+ * @param story
+ * @returns {Promise<void>}
+ */
 async function deleteCachedAnnotationData(room,story){
+    //get the annotations to be deleted using the getCachedAnnotationData method.
     let to_be_deleted =  await getCachedAnnotationData(room,story)
         .then((response) => {
             return response;
@@ -291,8 +344,8 @@ async function deleteCachedAnnotationData(room,story){
             var store_n = ANNOTATIONS_STORE_NAME;
             let tx = await db.transaction(store_n, 'readwrite');
             let store = await tx.objectStore(store_n);
-            //let index_annotations = await store.index('room');
 
+            //iterate over all annotations and delete each one.
             for(let ann of to_be_deleted) {
                 let id = ann.id
                 store.delete([id,room,story]);
@@ -305,40 +358,7 @@ async function deleteCachedAnnotationData(room,story){
     }
 
     else {
-        console.log('COULDNT DELETE THE ANNOTATIONS FROM IDB');
-        alert('COULDNT DELETE THE ANNOTATIONS FROM IDB');
+        console.log("COULDN'T DELETE THE ANNOTATIONS FROM IDB");
     }
 }
 window.deleteCachedAnnotationData = deleteCachedAnnotationData;
-
-/**
- * Given the returned story data from mongoDB, it returns the value of
- * the field author.
- */
-function getAuthor(data) {
-    if(data.author == null && data.author === undefined){
-        return "unavailable";
-    }
-    return data.author;
-}
-
-function getTitle(data) {
-    if(data.title == null && data.title === undefined){
-        return "unavailable";
-    }
-    return data.title;
-}
-
-function getDescription(data) {
-    if(data.description == null && data.description === undefined){
-        return "unavailable";
-    }
-    return data.description;
-}
-
-function getImageURL(data) {
-    if(data.imageUrl == null && data.imageUrl === undefined){
-        return "unavailable";
-    }
-    return data.imageUrl;
-}

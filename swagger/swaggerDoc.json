@@ -21,7 +21,164 @@
     }
   ],
   "paths": {
+    "/createStory": {
+      "post": {
+        "tags": [
+          "creating a story"
+        ],
+        "description": "creating a story - form taking input and sends it to the server via Axios",
+        "operationId": "story creation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Story"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Correct input of story structure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#"
+                },
+                "example": {
+                  "message": "no title provided",
+                  "internal_code": "missing_parameters"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/individual_storyPage": {
+      "post": {
+        "tags": [
+          "viewing an individual story"
+        ],
+        "description": "viewing the information of a single story",
+        "operationId": "story viewing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getAllStoryData": {
+      "post": {
+        "tags": [
+          "get and view all stories"
+        ],
+        "description": "viewing all stories",
+        "operationId": "all stories viewing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "components": {
+    "schemas": {
+      "title": {
+        "type": "string",
+        "description": "The title of the story",
+        "example": "Strange man"
+      },
+      "author": {
+        "type": "string",
+        "description": "The person who authored/uploaded the story",
+        "example": "John Doe"
+      },
+      "description": {
+        "type": "string",
+        "description": "The details of the context of the story",
+        "example": "Strange man circling the French embassy in London"
+      },
+      "imageUrl": {
+        "type": "string",
+        "description": "a date as a string",
+        "example": "13/12/2022"
+      },
+      "Story": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "$ref": "#/components/schemas/title"
+          },
+          "author": {
+            "$ref": "#/components/schemas/author"
+          },
+          "description": {
+            "$ref": "#/components/schemas/description"
+          },
+          "imageUrl": {
+            "$ref": "#/components/schemas/imageUrl"
+          }
+        }
+        },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "internal_code": {
+            "type": "string"
+          }
+        }
+      }
+      }
+    }
   }
-}

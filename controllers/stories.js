@@ -41,7 +41,8 @@ exports.newStory = function (req, res) {
 exports.getActiveStoryData=function (req,res) {
 
     var query = Story.find();
-    query.select('title author description imageUrl');
+    query.select('title author description imageUrl date');
+    query.sort({date:-1});
     query.exec(function (err, stories) {
         if (err){
             console.log('Error in retrieving stories.');

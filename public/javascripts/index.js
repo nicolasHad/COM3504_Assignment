@@ -15,7 +15,6 @@ const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
  * Also registers the service worker and throws an error in case the
  * browser does not support service workers
  */
-
 function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
@@ -46,7 +45,7 @@ function init() {
     let roomList=JSON.parse(localStorage.getItem('roomList'));
     console.log(roomList);
 
-    //@todo here is where you should initialise the socket operations as described in the lectures (room joining, chat message receipt etc.)
+    //here is where you should initialise the socket operations as described in the lectures (room joining, chat message receipt etc.)
     chat.on('joined', function (room, userId) {
         if (userId === name) {
             // it enters the chat
@@ -108,7 +107,8 @@ function selectItem(event){
 
     let tbody = document.getElementById('tbody_KG');
 
-    // Creating and adding data to first row of the table
+    // As soon as a KG element is chosen, this will directly be appended to
+    // the KG annotations table. Done by adding table rows using JS.
     let table_row = document.createElement('tr');
     let heading_1 = document.createElement('td');
     heading_1.innerText = row.id;
@@ -129,26 +129,8 @@ function selectItem(event){
 }
 
 /**
- * currently not used. left for reference
- * @param id
- * @param type
+ * Method for showing the KG form
  */
-function queryMainEntity(id, type){
-    const  params = {
-        'query': mainEntityName,
-        'types': type,
-        'limit': 10,
-        'indent': true,
-        'key' : apiKey,
-    };
-    $.getJSON(service_url + '?callback=?', params, function(response) {
-        $.each(response.itemListElement, function (i, element) {
-            $('<div>', {text: element['result']['name']}).appendTo(document.body)
-        });
-    });
-
-}
-
 function showKGForm(){
     document.getElementById('typeForm').style.display = 'block';
 }
@@ -160,27 +142,23 @@ function showKGForm(){
  * the server (or failing that) from the indexedDB, and the annotations of each story from indexedDB
  * @param forceReload true if the data is to be loaded from the server
  */
-/*
+
 function loadData(forceReload){
-    var roomList=JSON.parse(localStorage.getItem('roomList'));
-    roomList=removeDuplicates(roomList);
-    retrieveAllStoriesData(roomList, forceReload);
+    var storyList=JSON.parse(localStorage.getItem('storyList'));
+    storyList=removeDuplicates(storyList);
+    retrieveAllStoriesData(storyList, forceReload);
 }
-*/
+
 /**
  * it cycles through the list of stories and requests the data from the server for each
  * story
- * @param roomList the list of the cities the user has requested
- * @param date the date for the forecasts (not in use)
+ * @param storyList the list of the cities the user has requested
  * @param forceReload true if the data is to be retrieved from the server
  */
-/*
-function retrieveAllStoriesData(roomList, forceReload){
-    refreshStoryList();
-    for (let index in roomList)
-        loadStoryData(roomList[index], forceReload);
+function retrieveAllStoriesData(storyList, forceReload){
+    for (let index in storyList.reverse())
+        loadStoryData(storyList[index], forceReload);
 }
-*/
 
 /**
  * given one story, it queries the mongoDB to get the latest
@@ -190,6 +168,8 @@ function retrieveAllStoriesData(roomList, forceReload){
  * @param forceReload true if the data is to be retrieved from the server
  */
 async function loadStoryData(title,forceReload){
+    // First check for the story in the cached stories.
+    // If present, use this.
     let cachedData=await getCachedStoryData(title);
     if(!forceReload && cachedData && cachedData.length>0){
         for (let res of cachedData) {
@@ -197,6 +177,7 @@ async function loadStoryData(title,forceReload){
         }
         return cachedData[0];
     }
+    // If not in the cached stories, query the server for the story.
     else{
         const input = JSON.stringify({title:title});
         $.ajax({
@@ -204,21 +185,18 @@ async function loadStoryData(title,forceReload){
             data: input,
             contentType: 'application/json',
             type: 'POST',
+            // If querying the server is successful, call addToResults method
+            // to append the result to the page's contents/
             success: function(dataR){
-                //addToResults(dataR);
-                //handleResponse(dataR);
-                console.log('DATA FETCHED',dataR);
+                addToResults(dataR);
                 if(document.getElementById('offline_div')!=null)
                     document.getElementById('offline_div').style.display='none';
             },
             //If the server request has failed, show the cached data
             error: function (xhr,status,error) {
                 alert(error);
-                //showOfflineWarning();
-                const dvv = document.getElementById('offline_div');
-                if(dvv!=null)
-                    dvv.style.display='block';
-                //handleResponse(getCachedStoryData(title));
+                let cachedData=getCachedStoryData(title);
+                addToResults(cachedData);
             }
         });
     }
@@ -227,9 +205,14 @@ async function loadStoryData(title,forceReload){
         document.getElementById('story_list').style.display='none';
 }
 
+/**
+ * Method taking story data as parameter and appending an HTML card with
+ * the story's information using JS.
+ * @param dataR
+ */
 function addToResults(dataR) {
-    if (document.getElementById('results') != null) {
-        let bodyElement=document.getElementById('results');
+    if (document.getElementById('storiesBody') != null) {
+        let bodyElement=document.getElementById('storiesBody');
         let cardElement = document.createElement('div');
         let imageContainer = document.createElement('div');
         let infoContainer = document.createElement('div');
@@ -246,7 +229,7 @@ function addToResults(dataR) {
         formElement.setAttribute("id", formId);
         formElement.setAttribute("method", "post");
         formElement.setAttribute("action", "/individual_storyPage");
-        //formElement.setAttribute("onsubmit","/individual_storyPage");
+
         var titleInput = document.createElement("input");
         titleInput.setAttribute("type", "text");
         titleInput.setAttribute("name", "title");
@@ -287,7 +270,6 @@ function addToResults(dataR) {
         authorInput.style.display  = 'none';
         descriptionInput.style.display  = 'none';
         imageInput.style.display  = 'none';
-        //document.getElementById(formId).style.display = "none";
 
         cardElement.className = "storyCard";
         imageContainer.className = "image-container";
@@ -310,17 +292,27 @@ function addToResults(dataR) {
     }
 }
 
+/**
+ * Method storing a story in indexedDB
+ * @returns {Promise<void>}
+ */
 async function storeStoryINIdb() {
+    //Take the values of the story form fields.
     let author=document.getElementById('authorName').value;
     let title=document.getElementById('authorTitle').value;
     let desc=document.getElementById('authorDescription').value;
     let url=document.getElementById('image_url').value;
+    // cache the data using the idb method
     storeCachedStory(author,title,desc,url);
     alert("Successfully created story");
 }
 
-//Called every time the user connects to a room.
-//So that we keep track of which rooms were visited.
+
+/**
+ * Called every time the user connects to a room.
+ * So that we keep track of which rooms were visited.
+ * @param roomId
+ */
 function selectRoom(roomId) {
     var roomList=JSON.parse(localStorage.getItem('roomList'));
     if (roomList==null)
@@ -329,6 +321,20 @@ function selectRoom(roomId) {
     roomList = removeDuplicates(roomList);
     localStorage.setItem('roomList', JSON.stringify(roomList));
     console.log('room '+roomId+' added to roomList');
+}
+
+/**
+ * Every time a story is created ,the title is stored
+ * in local storage so we keep track of the stories and restore them.
+ * @param story
+ */
+function addStoryToList(story) {
+    var storyList=JSON.parse(localStorage.getItem('storyList'));
+    if (storyList==null)
+        storyList=[];
+    storyList.push(story);
+    localStorage.setItem('storyList', JSON.stringify(storyList));
+    console.log('room '+story+' added to roomList');
 }
 
 /**
@@ -367,7 +373,7 @@ async function sendChatText() {
     const annot_object = new WrittenAnnotation(roomId,story,chatText); //Create the text(annotation) object as soon as it's created.Cache it using indexedDB(storecachedData)
     storeCachedAnnotation(annot_object);
 
-    // @todo send the chat message
+    //send the chat message
     chat.emit('chat', roomNo, name, chatText);
     document.getElementById('chat_input').value='';
 }
@@ -399,6 +405,8 @@ async function connectToRoom() {
         "<p>  <b>Author:</b>"+ JSON.parse(storyData).author+"</p>"+
         "<p>  <b>Title:</b>"+ JSON.parse(storyData).title+"</p>"+
         "<p>  <b>Description:</b>"+ JSON.parse(storyData).description+"</p>";
+
+
 }
 
 /**
@@ -427,13 +435,12 @@ function hideLoginInterface(room, userId) {
     document.getElementById('chat_interface').style.display = 'block';
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
-    document.getElementById('results').style.display = 'none';
+    document.getElementById('storiesBody').style.display = 'none';
     document.getElementById('center').style.display = 'none';
 }
 
 
-// These two functions are used to get the data from the form and send it to the controller I think
-// I am not sure, I took them from the lab
+
 function sendAxiosQuery(url, data) {
     axios.post(url, data)
         .then((dataR) => {// no need to JSON parse the result, as we are using
@@ -449,27 +456,41 @@ async function onSubmit(url) {
     for (index in formArray){
         data[formArray[index].name]= formArray[index].value;
     }
-    // const data = JSON.stringify($(this).serializeArray());
+    console.log("the DATA",data.authorTitle);
+
+    addStoryToList(data.authorTitle);
     sendAxiosQuery(url, data);
     event.preventDefault();
 }
 
 
-function sendAxiosQuery_2(url, data) {
+/**
+ * Method used for sending data to the server and retrieving all stories.
+ * @param url
+ * @param data
+ * @returns {Promise<void>}
+ */
+async function sendAxiosQuery_2(url, data) {
     axios.post(url, data)
         .then((dataR) => {// no need to JSON parse the result, as we are using
-            // we need to JSON stringify the object
-            //document.getElementById('results').innerHTML = JSON.stringify(dataR.data);
             console.log(dataR.data);
-            for (d of dataR.data){
+            for (let d of dataR.data){
                 addToResults(d);
             }
         })
-        .catch(function (response) {
+        .catch(async function (response) {
             alert(response);
+
         })
 }
 
+
+/**
+ * Method called on the onload of the body in all stories page.
+ * It calls the above method to get all stories data.
+ * @param url
+ * @returns {Promise<void>}
+ */
 async function onSubmit_2(url) {
     var formArray= $("form").serializeArray();
     var data={};
@@ -477,13 +498,13 @@ async function onSubmit_2(url) {
         data[formArray[index].name]= formArray[index].value;
     }
     // const data = JSON.stringify($(this).serializeArray());
+    //addStoryToList(data.authorTitle);
     sendAxiosQuery_2(url, data);
     event.preventDefault();
 }
 
-// Create the annotations/story classes.(NOT SURE IF WE REALLY NEED THEM,IF NOT IGNORE)
+// Create the annotations/story classes
 // We define an annotation object by specifying story(the story where the annotation belongs to) and the body(the chat text).
-//I've changed the story field to room, because the annotations are linked to the room,not the story.
 class WrittenAnnotation{
     constructor(room, story, body) {
         this.room=room;

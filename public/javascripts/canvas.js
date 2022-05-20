@@ -118,28 +118,34 @@ async function initCanvas(sckt, imageUrl) {
     });
 
     // code for retrieving any cached annotations for the current roomNo(meaning that the room has been visited before)
-    // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations).
+    // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations) or load them
+    // in the KG table if they are KG annotations.
     $('#chat_interface').ready(setTimeout(async function (e) {
         let roomId=document.getElementById('roomNo').value;
         let story=document.getElementById('story_title').value;
+
+        //Get the cached annotations
         const cachedAnnotations =  await getCachedAnnotationData(roomId,story)
             .then((response) => {
                 return response;
             })
         console.log(cachedAnnotations);
+
+        // for each retrieved annotation.
         for(let ann of cachedAnnotations) {
+            //if annotation is a drawn annotation, draw it on the canvas.
             if (ann.currX != null) {
                 drawOnCanvas(ctx, ann.canvas_width,ann.canvas_height, ann.prevX,ann.prevY,ann.currX,ann.currY,'red',4);
             }
+            //if it is a written annotation, append it to the chat history.
             else if(ann.body !=null){
                 writeOnHistory(ann.body);
             }
+            //if it is a KG annotation, append it to the KG table.
             else{
-
-                let KG_table = document.getElementById('KGResults_table');
                 let tbody = document.getElementById('tbody_KG');
 
-                // Creating and adding data to first row of the table
+                // Creating and adding data to first row of the KG table
                 let row = document.createElement('tr');
                 let heading_1 = document.createElement('td');
                 heading_1.innerText = ann.resId;
@@ -155,25 +161,6 @@ async function initCanvas(sckt, imageUrl) {
                 row.appendChild(heading_3);
                 row.appendChild(heading_4);
                 tbody.appendChild(row);
-
-                /*
-                let KGresults = document.getElementById('KGResults');
-                let cardElement = document.createElement('div');
-                let infoContainer = document.createElement('div');
-                let resId = document.createElement('h4');
-                let resName = document.createElement('h5');
-                let resDescription = document.createElement('p');
-                let resUrl = document.createElement('p');
-
-                resId.innerText = ann.resId;
-                resName.innerText = ann.resName;
-                resDescription.innerText = ann.resDescription;
-                resUrl.innerText = ann.resUrl;
-
-                KGresults.appendChild(cardElement);
-                cardElement.append(infoContainer);
-                infoContainer.append(resId,resName,resDescription,resUrl);
-              */
             }
         }
     },100));

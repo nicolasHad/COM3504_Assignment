@@ -35,6 +35,7 @@ let filesToCache = [
     "/javascripts/image.js",
     "/javascripts/database.js",
     "/stylesheets/style.css",
+    "/images/logo.png"
 ];
 
 /**
@@ -71,11 +72,19 @@ self.addEventListener('activate', function (e) {
 /**
  * This function is called when a fetch request is received by the service worker
  */
-self.addEventListener('fetch', function (e) {
-    e.respondWith(
+self.addEventListener('fetch', function (event) {
+    /*e.respondWith(
         fetch(e.request).catch(function(){
             return caches.match(e.request);
         })
-    );
+    );*/
+    event.respondWith(async function(){
+        try {
+            return await fetch(event.request);
+        }
+        catch (err){
+            return caches.match(event.request);
+        }
+    }());
 });
 
