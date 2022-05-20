@@ -3,6 +3,7 @@
  */
 let room;
 let userId;
+//set initial color to red
 let color = 'red', thickness = 4;
 
 /**
@@ -21,6 +22,7 @@ async function initCanvas(sckt, imageUrl) {
     let ctx = cvx.getContext('2d');
     img.src = imageUrl;
 
+    //check if "annotate" mode is selected
     let penSelection = document.getElementById('annotate').checked;
 
     // event on the canvas when the mouse is on it
@@ -28,17 +30,28 @@ async function initCanvas(sckt, imageUrl) {
         penSelection = document.getElementById('annotate').checked;
         prevX = currX;
         prevY = currY;
-        currX = e.clientX - canvas.position().left;
+        currX = e.clientX - canvas.position().left - 170;
         currY = e.clientY - canvas.position().top;
+
+        //set color as blue if annotation mode
+        if (penSelection){
+            color = 'blue';
+        }
+        else {
+            color = 'red';
+        }
+
 
         if (e.type === 'mousedown') {
             flag = true;
             socket.emit('chat',roomNo, name, ' has started drawing.');
         }
+        //if you stop clicking or get out of canvas stop drawing
         if (e.type === 'mouseup' || (e.type === 'mouseout' && flag)) {
             flag = false;
+            socket.emit('chat',roomNo, name, ' has finished drawing.');
             if (e.type==='mouseup')
-                socket.emit('chat',roomNo, name, ' has finished drawing.');
+
                 if (penSelection)
                     showKGForm();
         }
@@ -55,20 +68,26 @@ async function initCanvas(sckt, imageUrl) {
         }
     });
 
-    // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
+    // canvas cleaning function
     $('.canvas-clear').on('click', function (e) {
         let c_width = canvas.width;
         let c_height = canvas.height;
+        //clear the canvas
         ctx.clearRect(0, 0, c_width, c_height);
         // @todo if you clear the canvas, you want to let everyone know via socket.io (socket.emit...)
+        //redraw the image on the canvas
         ctx.drawImage(img, 0, 0, c_width, c_height);
+        //let chat know canvas was cleared
         socket.emit('clear canvas',roomNo,name);
         socket.emit('chat',roomNo, name, ' has cleared the canvas.');
+
+        //delete cache when cleared
         let roomId=document.getElementById('roomNo').value;
         let story=document.getElementById('story_title').value;
         deleteCachedAnnotationData(roomId,story);
     });
 
+    //clear canvas function
     socket.on('clear canvas', function (roomNo,name) {
         let c_width = canvas.width;
         let c_height = canvas.height;
@@ -76,9 +95,7 @@ async function initCanvas(sckt, imageUrl) {
         ctx.drawImage(img, 0, 0, c_width, c_height);
     });
 
-    // @todo here you want to capture the event on the socket when someone else is drawing on their canvas (socket.on...)
-    // I suggest that you receive userId, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness
-    // and then you call
+    // function draws on the canvas to emit on the other people in the chat
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
         let ctx0 = canvas[0].getContext('2d');
         let story=document.getElementById('story_title').value;

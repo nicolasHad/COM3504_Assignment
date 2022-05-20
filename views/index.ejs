@@ -60,20 +60,20 @@
     <div>
     <p><div id="who_you_are" style="display: inline" style="height: 10vh"></div>, you are in room: <div id="in_room" style="display: inline"></div>
     </div>
+    <div id="story_desc" style="height: 200px"></div>
     <button class="canvas-clear">Clear Canvas</button>
     </p>
-
-    <h1>Annotate or Draw</h1>
-
+    <div>
+<div id="canvas-left">
     <form id = 'kgform' action="/action_page.php">
-        <p>Please select your favorite Web language:</p>
         <input type="radio" name="pen_selection" id="annotate" value="annotate">Annotate<br>
         <input type="radio" name="pen_selection" id="draw" value="draw" checked >Draw<br>
     </form>
 
 
-    <h1>Search the Knowledge Graph</h1>
+
     <div class="myRow" id="typeForm">
+        <h1>Search the Knowledge Graph</h1>
         <label for="myType">Type: </label><input type="text" id="myType">
         <button onclick="widgetInit()">Set type</button>
     </div>
@@ -93,15 +93,18 @@
             </div>
         </div>
     </div>
-
-    <div style="width: 100%; height: 50vh">
-            <img id="image" height="100%" >
-            <canvas  id="canvas" ></canvas>
+</div>
+    <div id="canvas-right">
+    <div style="">
+            <img id="image" height="100%">
+            <canvas  id="canvas" height="100%"></canvas>
     </div>
-    <div id="story_desc" style="height: 15vh"></div>
-    <hr>
+    </div>
+</div>
+    <br>
     <!--    </div>-->
     <div id="history" style="height: 35vh" class="boxed scrolling" ></div>
+    <br>
     <div id="input" style="height: 5vh" class=" boxed">
         <form onsubmit="return false;" style="width: 100%">
             <p>
@@ -111,6 +114,7 @@
             </p>
         </form>
     </div>
+    <br><br><br>
     <div id="KGResults" style="height: 400px; overflow-y: scroll">
         <table id="KGResults_table">
             <tr>
@@ -126,11 +130,10 @@
 
         </table>
     </div>
-
 </div>
 
-
-<div id="storiesBody" class="storiesBody" style="margin-top:30px"></div>
+    <br><br><br>
+<div id="storiesBody" style="margin-top:30px"></div>
 </main>
 </body>
 </html>
