@@ -11,6 +11,8 @@ const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
  * called by <body onload>
  * it initialises the interface and the expected socket messages
  * plus the associated actions
+ * Also registers the service worker and throws an error in case the
+ * browser does not support service workers
  */
 
 function init() {

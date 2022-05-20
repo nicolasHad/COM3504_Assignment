@@ -37,7 +37,9 @@ let filesToCache = [
     "/stylesheets/style.css",
 ];
 
-//Installs the service worker
+/**
+ * Installs the service worker
+ */
 self.addEventListener('install', function (e) {
     console.log('[ServiceWorker] Install');
     e.waitUntil(
@@ -66,7 +68,9 @@ self.addEventListener('activate', function (e) {
     );
     return self.clients.claim();
 });
-// Called when a fetch request is received by the service worker
+/**
+ * This function is called when a fetch request is received by the service worker
+ */
 self.addEventListener('fetch', function (e) {
     e.respondWith(
         fetch(e.request).catch(function(){
