@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="/javascripts/database.js" type="module"></script>
     <script src="/javascripts/index.js"></script>
@@ -18,12 +19,13 @@
     <%- include('./navbar.ejs') %>
 </header>
 <main>
-    <div >
-<p id="title_indiv"><%= title %></p><p id="author_indiv"> by <%= author %></p>
+    <div>
+        <p id="title_indiv"><%= title %></p>
+        <p id="author_indiv"> by <%= author %></p>
     </div>
-    <hr />
+    <hr/>
 
-<img id="individualimage" src=<%= imageUrl %>>
+    <img id="individualimage" src=<%= imageUrl %>>
     <p><%= description %></p>
 </main>
 </body>

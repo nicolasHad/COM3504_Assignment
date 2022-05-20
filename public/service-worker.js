@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //Variable declarations
-let cache= null;
+let cache = null;
 let dataCacheName = 'storiesData';
 let cacheName = 'stories';
 let filesToCache = [
@@ -46,7 +46,7 @@ self.addEventListener('install', function (e) {
     e.waitUntil(
         caches.open(cacheName).then(function (cacheX) {
             console.log('[ServiceWorker] Caching app shell');
-            cache= cacheX;
+            cache = cacheX;
             return cache.addAll(filesToCache);
         })
     );
@@ -78,11 +78,10 @@ self.addEventListener('fetch', function (event) {
             return caches.match(e.request);
         })
     );*/
-    event.respondWith(async function(){
+    event.respondWith(async function () {
         try {
             return await fetch(event.request);
-        }
-        catch (err){
+        } catch (err) {
             return caches.match(event.request);
         }
     }());

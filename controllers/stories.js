@@ -23,11 +23,11 @@ exports.newStory = function (req, res) {
     console.log('received: ' + story);
     //Saves the data into mongoDB
     story.save()
-        .then ((results) =>               {
+        .then((results) => {
             console.log(results._id);
             res.json(story);
         })
-        .catch ((error) => {
+        .catch((error) => {
             res.status(500).json('Could not insert - probably incorrect data! ' + JSON.stringify(error));
         })
 
@@ -38,13 +38,13 @@ exports.newStory = function (req, res) {
  * @param req
  * @param res
  */
-exports.getActiveStoryData=function (req,res) {
+exports.getActiveStoryData = function (req, res) {
 
     var query = Story.find();
     query.select('title author description imageUrl date');
-    query.sort({date:-1});
+    query.sort({date: -1});
     query.exec(function (err, stories) {
-        if (err){
+        if (err) {
             console.log('Error in retrieving stories.');
         }
         //console.log("Found stories from MongoDB!"+stories);
@@ -57,11 +57,11 @@ exports.getActiveStoryData=function (req,res) {
  * @param req
  * @param res
  */
-exports.getSelectedStoryData=function (req,res) {
+exports.getSelectedStoryData = function (req, res) {
     //req contains the id of the story to retrieve.
-    var query=Story.find({'title':req.body.title.toString()});
-    query.exec(function(err,story){
-        if(err){
+    var query = Story.find({'title': req.body.title.toString()});
+    query.exec(function (err, story) {
+        if (err) {
             console.log('Cannot retrieve story.');
         }
         res.json(story);

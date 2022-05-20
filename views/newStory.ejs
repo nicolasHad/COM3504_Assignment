@@ -5,7 +5,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="/javascripts/index.js"></script>
     <script src="/javascripts/database.js" type="module"></script>
     <script src="/javascripts/canvas.js"></script>
@@ -16,12 +17,12 @@
 <header>
     <%- include('./navbar.ejs') %>
 </header>
-    <main>
-        <h1>Create a story</h1>
+<main>
+    <h1>Create a story</h1>
 
-        <!-- Drop down menu -->
-        <div id="initial_form" style="display: block" class="form">
-            <p>Select an uploading method</p>
+    <!-- Drop down menu -->
+    <div id="initial_form" style="display: block" class="form">
+        <p>Select an uploading method</p>
         <div class="dropDown">
             <select class="form-select" aria-label="Select upload method" id="selection">
                 <option value="1">Local file</option>
@@ -29,52 +30,53 @@
                 <br>
             </select>
         </div>
-        </div>
-        <!-- Buttons for stream and snapshot-->
-        <div id="initial_form" style="display: block" class="form">
-        <div class="webRTC" style = "display:none" id = "web">
+    </div>
+    <!-- Buttons for stream and snapshot-->
+    <div id="initial_form" style="display: block" class="form">
+        <div class="webRTC" style="display:none" id="web">
             <div class="button-group">
                 <button id="start" type="button">Start live feed</button>
                 <button id="capture" type="button">Capture snapshot</button>
                 <button id="stop" type="button">Stop</button>
             </div>
-        <!-- Live feed and canvas -->
-            <div class = "streamCanvas"></div>
-                <h3>Live camera</h3>
-                <video id="stream" width="200" height="160"></video>
-                <h3>Snapshot</h3>
+            <!-- Live feed and canvas -->
+            <div class="streamCanvas"></div>
+            <h3>Live camera</h3>
+            <video id="stream" width="200" height="160"></video>
+            <h3>Snapshot</h3>
             <div class="center_snap">
-                <canvas hidden="hidden" id="captureCanvas" width="200" height="160" ></canvas>
+                <canvas hidden="hidden" id="captureCanvas" width="200" height="160"></canvas>
                 <div id="snapshot"></div>
             </div>
-            </div>
         </div>
-        <!-- Input form -->
-        <div id="initial_form" style="display: block" class="form"> <br>
-            <form id = "xForm" onsubmit="onSubmit('/newStory')">
-                <p><label for="authorName"> Your name </label><br>
-                    <input type="text" id="authorName" name="authorName">
+    </div>
+    <!-- Input form -->
+    <div id="initial_form" style="display: block" class="form"><br>
+        <form id="xForm" onsubmit="onSubmit('/newStory')">
+            <p><label for="authorName"> Your name </label><br>
+                <input type="text" id="authorName" name="authorName">
+            </p>
+            <p><label for="authorTitle"> Title: </label>
+                <br>
+                <input type="text" id="authorTitle" name="authorTitle">
+            </p>
+            <p><label for="authorDescription"> Story Description: </label><br>
+                <input type="text" id="authorDescription" name="authorDescription">
+            </p>
+            <!-- Upload image from local file -->
+            <div class="local" id="fromLocal">
+                <p>
+                    Select image (Max 70KB): <br><input type="file" onchange="uploadAndConvert(this)" id="image"
+                                                        accept=".png, .jpeg" id="g"/><br><br>
                 </p>
-                <p><label for="authorTitle"> Title: </label>
-                    <br>
-                    <input type="text" id="authorTitle" name="authorTitle">
-                </p>
-                <p><label for="authorDescription"> Story Description: </label><br>
-                    <input type="text" id="authorDescription" name="authorDescription">
-                </p>
-                <!-- Upload image from local file -->
-                <div class="local" id = "fromLocal">
-                    <p>
-                        Select image (Max 70KB): <br><input type="file" onchange="uploadAndConvert(this)" id = "image" accept=".png, .jpeg" id="g"/><br><br>
-                    </p>
             </div>
-                <input type="text" id="image_url" name="converted" hidden="hidden">
-            <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit" ></p>
+            <input type="text" id="image_url" name="converted" hidden="hidden">
+            <p><input type="submit" onclick="storeStoryINIdb()" name="g" value="Submit"></p>
         </form>
-            <!-- Script is called after the dom is painted-->
-            <script src="/javascripts/image.js"></script>
-        </div>
-        <br>
-    </main>
+        <!-- Script is called after the dom is painted-->
+        <script src="/javascripts/image.js"></script>
+    </div>
+    <br>
+</main>
 </body>
 </html>

@@ -5,7 +5,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/javascripts/index.js"></script>
@@ -17,7 +18,7 @@
 
     <style>
         .kge-search-picker {
-            width: <DROPDOWN_MENU_WIDTH>;
+            width: < DROPDOWN_MENU_WIDTH >;
         }
     </style>
 
@@ -31,109 +32,109 @@
 </header>
 <main>
     <select name="selection_mainPage" id="selection_mainPage" onchange="loadData()">
-        <option value="Join a room" >Join a room</option>
+        <option value="Join a room">Join a room</option>
         <option value="All stories">All stories</option>
     </select>
-<div id="initial_form" style="display: block">
-
-    <h1><%= title %></h1>
-    <p>Please insert the id of the Room you want to Join, if you do not have a room id, click Generate Room</p>
-    <form onsubmit="return false;" class="form">
-        <p><label for="name"> Your name </label><br>
-            <input type="text" id="firstname" name="firstname">
-        </p>
-        <p><label for="story_title"> Story Title </label><br>
-            <input type="text" id="story_title" name="story_title">
-        </p>
-        <p>
-            <label for="roomNo"> Your room </label><br>
-            <input type="text" id="roomNo" name="roomNo">
-            <button id="roomNoGenerator" onclick="generateRoom()">Generate Room</button>
-        </p>
-        <button id="connect" onclick="connectToRoom()">Connect</button>
-    </form>
-</div>
-
-<div class="offline_div" id="offline_div" style="display: none">You are offline</div>
-
-<div id="chat_interface" style="display: none">
-    <div>
-    <p><div id="who_you_are" style="display: inline" style="height: 10vh"></div>, you are in room: <div id="in_room" style="display: inline"></div>
-    </div>
-    <div id="story_desc" style="height: 200px"></div>
-    <button class="canvas-clear">Clear Canvas</button>
-    </p>
-    <div>
-<div id="canvas-left">
-    <form id = 'kgform' action="/action_page.php">
-        <input type="radio" name="pen_selection" id="annotate" value="annotate">Annotate<br>
-        <input type="radio" name="pen_selection" id="draw" value="draw" checked >Draw<br>
-    </form>
-
-
-
-    <div class="myRow" id="typeForm">
-        <h1>Search the Knowledge Graph</h1>
-        <label for="myType">Type: </label><input type="text" id="myType">
-        <button onclick="widgetInit()">Set type</button>
-    </div>
-    <div class="myRow" id='widget' style="display: none">
-        <label for="myInput">Search for: </label><input type="text" id="myInput">
-        <div class="myRow" id="typeSet"></div>
-    </div>
-    <div>
-        <div class='resultPanel' id="resultPanel" style="display: none">
-            <h3 id="resultName"></h3>
-            <h4 id="resultId"></h4>
-            <div id="resultDescription"></div>
-            <div>
-                <a id="resultUrl" target="_blank">
-                    Link to Webpage
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-    <div id="canvas-right">
-    <div style="">
-            <img id="image" height="100%">
-            <canvas  id="canvas" height="100%"></canvas>
-    </div>
-    </div>
-</div>
-    <br>
-    <!--    </div>-->
-    <div id="history" style="height: 35vh" class="boxed scrolling" ></div>
-    <br>
-    <div id="input" style="height: 5vh" class=" boxed">
-        <form onsubmit="return false;" style="width: 100%">
-            <p>
-                <label for="name"> chat: </label>
-                <input type="text" id="chat_input" name="chat_input" style="width: 80%">
-                <button id="chat_send" onclick="sendChatText()">Send</button>
+    <div id="initial_form" style="display: block">
+        <p>Please insert the id of the Room you want to Join, if you do not have a room id, click Generate Room</p>
+        <form onsubmit="return false;" class="form">
+            <p><label for="name"> Your name </label><br>
+                <input type="text" id="firstname" name="firstname">
             </p>
+            <p><label for="story_title"> Story Title </label><br>
+                <input type="text" id="story_title" name="story_title">
+            </p>
+            <p>
+                <label for="roomNo"> Your room </label><br>
+                <input type="text" id="roomNo" name="roomNo">
+                <button id="roomNoGenerator" onclick="generateRoom()">Generate Room</button>
+            </p>
+            <button id="connect" onclick="connectToRoom()">Connect</button>
         </form>
     </div>
-    <br><br><br>
-    <div id="KGResults" style="height: 400px; overflow-y: scroll">
-        <table id="KGResults_table">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Wikipedia URL</th>
-            </tr>
 
-            <tbody id="tbody_KG">
+    <div class="offline_div" id="offline_div" style="display: none">You are offline</div>
 
-            </tbody>
+    <div id="chat_interface" style="display: none">
+        <div>
+            <p>
+            <div id="who_you_are" style="display: inline" style="height: 10vh"></div>
+            , you are in room:
+            <div id="in_room" style="display: inline"></div>
+        </div>
+        <div id="story_desc" style="height: 200px"></div>
+        <button class="canvas-clear">Clear Canvas</button>
+        </p>
+        <div>
+            <div id="canvas-left">
+                <form id='kgform' action="/action_page.php">
+                    <input type="radio" name="pen_selection" id="annotate" value="annotate">Annotate<br>
+                    <input type="radio" name="pen_selection" id="draw" value="draw" checked>Draw<br>
+                </form>
 
-        </table>
+
+                <div class="myRow" id="typeForm">
+                    <h1>Search the Knowledge Graph</h1>
+                    <label for="myType">Type: </label><input type="text" id="myType">
+                    <button onclick="widgetInit()">Set type</button>
+                </div>
+                <div class="myRow" id='widget' style="display: none">
+                    <label for="myInput">Search for: </label><input type="text" id="myInput">
+                    <div class="myRow" id="typeSet"></div>
+                </div>
+                <div>
+                    <div class='resultPanel' id="resultPanel" style="display: none">
+                        <h3 id="resultName"></h3>
+                        <h4 id="resultId"></h4>
+                        <div id="resultDescription"></div>
+                        <div>
+                            <a id="resultUrl" target="_blank">
+                                Link to Webpage
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="canvas-right">
+                <div style="">
+                    <img id="image" height="100%">
+                    <canvas id="canvas" height="100%"></canvas>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--    </div>-->
+        <div id="history" style="height: 35vh" class="boxed scrolling"></div>
+        <br>
+        <div id="input" style="height: 5vh" class=" boxed">
+            <form onsubmit="return false;" style="width: 100%">
+                <p>
+                    <label for="name"> chat: </label>
+                    <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+                    <button id="chat_send" onclick="sendChatText()">Send</button>
+                </p>
+            </form>
+        </div>
+        <br><br><br>
+        <div id="KGResults" style="height: 400px; overflow-y: scroll">
+            <table id="KGResults_table">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Wikipedia URL</th>
+                </tr>
+
+                <tbody id="tbody_KG">
+
+                </tbody>
+
+            </table>
+        </div>
     </div>
-</div>
 
     <br><br><br>
-<div id="storiesBody" style="margin-top:30px"></div>
+    <div id="storiesBody" style="margin-top:30px"></div>
 </main>
 </body>
 </html>

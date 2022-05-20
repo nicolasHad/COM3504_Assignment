@@ -167,7 +167,7 @@
             "$ref": "#/components/schemas/imageUrl"
           }
         }
-        },
+      },
       "Error": {
         "type": "object",
         "properties": {
@@ -179,6 +179,6 @@
           }
         }
       }
-      }
     }
   }
+}

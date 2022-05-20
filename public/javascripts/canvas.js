@@ -34,23 +34,22 @@ async function initCanvas(sckt, imageUrl) {
         currY = e.clientY - canvas.position().top;
 
         //set color as blue if annotation mode
-        if (penSelection){
+        if (penSelection) {
             color = 'blue';
-        }
-        else {
+        } else {
             color = 'red';
         }
 
 
         if (e.type === 'mousedown') {
             flag = true;
-            socket.emit('chat',roomNo, name, ' has started drawing.');
+            socket.emit('chat', roomNo, name, ' has started drawing.');
         }
         //if you stop clicking or get out of canvas stop drawing
         if (e.type === 'mouseup' || (e.type === 'mouseout' && flag)) {
             flag = false;
-            socket.emit('chat',roomNo, name, ' has finished drawing.');
-            if (e.type==='mouseup')
+            socket.emit('chat', roomNo, name, ' has finished drawing.');
+            if (e.type === 'mouseup')
 
                 if (penSelection)
                     showKGForm();
@@ -58,11 +57,11 @@ async function initCanvas(sckt, imageUrl) {
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
             if (flag) {
-                let roomId=document.getElementById('roomNo').value;
-                let story=document.getElementById('story_title').value;
+                let roomId = document.getElementById('roomNo').value;
+                let story = document.getElementById('story_title').value;
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
                 socket.emit('draw', roomNo, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
-                const annot_object = new DrawnAnnotation(roomId,story, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+                const annot_object = new DrawnAnnotation(roomId, story, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
                 storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
             }
         }
@@ -74,21 +73,20 @@ async function initCanvas(sckt, imageUrl) {
         let c_height = canvas.height;
         //clear the canvas
         ctx.clearRect(0, 0, c_width, c_height);
-        // @todo if you clear the canvas, you want to let everyone know via socket.io (socket.emit...)
         //redraw the image on the canvas
         ctx.drawImage(img, 0, 0, c_width, c_height);
         //let chat know canvas was cleared
-        socket.emit('clear canvas',roomNo,name);
-        socket.emit('chat',roomNo, name, ' has cleared the canvas.');
+        socket.emit('clear canvas', roomNo, name);
+        socket.emit('chat', roomNo, name, ' has cleared the canvas.');
 
         //delete cache when cleared
-        let roomId=document.getElementById('roomNo').value;
-        let story=document.getElementById('story_title').value;
-        deleteCachedAnnotationData(roomId,story);
+        let roomId = document.getElementById('roomNo').value;
+        let story = document.getElementById('story_title').value;
+        deleteCachedAnnotationData(roomId, story);
     });
 
     //clear canvas function
-    socket.on('clear canvas', function (roomNo,name) {
+    socket.on('clear canvas', function (roomNo, name) {
         let c_width = canvas.width;
         let c_height = canvas.height;
         ctx.clearRect(0, 0, c_width, c_height);
@@ -98,7 +96,7 @@ async function initCanvas(sckt, imageUrl) {
     // function draws on the canvas to emit on the other people in the chat
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
         let ctx0 = canvas[0].getContext('2d');
-        let story=document.getElementById('story_title').value;
+        let story = document.getElementById('story_title').value;
         drawOnCanvas(ctx0, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness);
         // Store the received annotations to indexedDB as well.
         const annot_object = new DrawnAnnotation(room, story, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
@@ -115,17 +113,17 @@ async function initCanvas(sckt, imageUrl) {
             if (img.naturalHeight) {
                 clearInterval(poll);
                 // resize the canvas
-                let ratioX=1;
-                let ratioY=1;
+                let ratioX = 1;
+                let ratioY = 1;
                 // if the screen is smaller than the img size we have to reduce the image to fit
-                if (img.clientWidth>window.innerWidth)
-                    ratioX=window.innerWidth/img.clientWidth;
-                if (img.clientHeight> window.innerHeight)
-                    ratioY= img.clientHeight/window.innerHeight;
-                let ratio= Math.min(ratioX, ratioY);
+                if (img.clientWidth > window.innerWidth)
+                    ratioX = window.innerWidth / img.clientWidth;
+                if (img.clientHeight > window.innerHeight)
+                    ratioY = img.clientHeight / window.innerHeight;
+                let ratio = Math.min(ratioX, ratioY);
                 // resize the canvas to fit the screen and the image
-                cvx.width = canvas.width = img.clientWidth*ratio;
-                cvx.height = canvas.height = img.clientHeight*ratio;
+                cvx.width = canvas.width = img.clientWidth * ratio;
+                cvx.height = canvas.height = img.clientHeight * ratio;
                 // draw the image onto the canvas
                 drawImageScaled(img, cvx, ctx);
                 // hide the image element as it is not needed
@@ -138,28 +136,28 @@ async function initCanvas(sckt, imageUrl) {
     // and load them on the canvas(for drawn annotations) or load them in chat history(for written annotations) or load them
     // in the KG table if they are KG annotations.
     $('#chat_interface').ready(setTimeout(async function (e) {
-        let roomId=document.getElementById('roomNo').value;
-        let story=document.getElementById('story_title').value;
+        let roomId = document.getElementById('roomNo').value;
+        let story = document.getElementById('story_title').value;
 
         //Get the cached annotations
-        const cachedAnnotations =  await getCachedAnnotationData(roomId,story)
+        const cachedAnnotations = await getCachedAnnotationData(roomId, story)
             .then((response) => {
                 return response;
             })
         console.log(cachedAnnotations);
 
         // for each retrieved annotation.
-        for(let ann of cachedAnnotations) {
+        for (let ann of cachedAnnotations) {
             //if annotation is a drawn annotation, draw it on the canvas.
             if (ann.currX != null) {
-                drawOnCanvas(ctx, ann.canvas_width,ann.canvas_height, ann.prevX,ann.prevY,ann.currX,ann.currY,'red',4);
+                drawOnCanvas(ctx, ann.canvas_width, ann.canvas_height, ann.prevX, ann.prevY, ann.currX, ann.currY, 'red', 4);
             }
             //if it is a written annotation, append it to the chat history.
-            else if(ann.body !=null){
+            else if (ann.body != null) {
                 writeOnHistory(ann.body);
             }
             //if it is a KG annotation, append it to the KG table.
-            else{
+            else {
                 let tbody = document.getElementById('tbody_KG');
 
                 // Creating and adding data to first row of the KG table
@@ -180,9 +178,8 @@ async function initCanvas(sckt, imageUrl) {
                 tbody.appendChild(row);
             }
         }
-    },100));
+    }, 100));
 }
-
 
 
 /**
@@ -221,13 +218,13 @@ function drawImageScaled(img, canvas, ctx) {
  */
 function drawOnCanvas(ctx, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
     //get the ration between the current canvas and the one it has been used to draw on the other comuter
-    let ratioX= canvas.width/canvasWidth;
-    let ratioY= canvas.height/canvasHeight;
+    let ratioX = canvas.width / canvasWidth;
+    let ratioY = canvas.height / canvasHeight;
     // update the value of the points to draw
-    prevX*=ratioX;
-    prevY*=ratioY;
-    currX*=ratioX;
-    currY*=ratioY;
+    prevX *= ratioX;
+    prevY *= ratioY;
+    currX *= ratioX;
+    currY *= ratioY;
     ctx.beginPath();
     ctx.moveTo(prevX, prevY);
     ctx.lineTo(currX, currY);
