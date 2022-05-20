@@ -41,7 +41,7 @@
  * To go back to the home page press the "aNOTEate" underlined link
 
  
- ** Offline use
+ ## Offline use
  
  * The web app will work offline, maintaing most of its functionalies
  * Enter a room using the same process 
