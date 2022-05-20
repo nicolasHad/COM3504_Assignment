@@ -211,22 +211,6 @@ async function loadStoryData(title,forceReload){
 
 function addToResults(dataR) {
     if (document.getElementById('results') != null) {
-       /* const row = document.createElement('div');
-        // appending a new row
-        document.getElementById('results').appendChild(row);
-        // formatting the row by applying css classes
-        row.classList.add('card');
-        row.classList.add('my_card');
-        row.classList.add('bg-faded');
-        // the following is far from ideal. we should really create divs using javascript
-        // rather than assigning innerHTML
-        row.innerHTML = "<div class='card-block'>" +
-            "<div class='row'>" +
-            "<div class='col-sm'>" + dataR.author + "</div>" +
-            "<div class='col-sm'>" + dataR.title + "</div>" +
-            "<div class='col-sm'>" + dataR.description + "</div>" +
-            "<div class='col-sm'></div></div></div>";*/
-
         let bodyElement=document.getElementById('results');
         let cardElement = document.createElement('div');
         let imageContainer = document.createElement('div');
@@ -237,6 +221,54 @@ function addToResults(dataR) {
         let paragraphElement = document.createElement('p');
         let btnElement = document.createElement('a');
 
+
+        let formId = "form"+ Math.random().toString();
+        let formElement = document.createElement('form');
+        formElement.setAttribute("id", formId);
+        formElement.setAttribute("method", "post");
+        formElement.setAttribute("action", "/individual_storyPage");
+        //formElement.setAttribute("onsubmit","/individual_storyPage");
+        var titleInput = document.createElement("input");
+        titleInput.setAttribute("type", "text");
+        titleInput.setAttribute("name", "title");
+        titleInput.setAttribute("value", dataR.title);
+        titleInput.setAttribute("readonly", "true");
+
+        var authorInput = document.createElement("input");
+        authorInput.setAttribute("type", "text");
+        authorInput.setAttribute("name", "author");
+        authorInput.setAttribute("value", dataR.author);
+        authorInput.setAttribute("readonly", "true");
+
+        var descriptionInput = document.createElement("input");
+        descriptionInput.setAttribute("type", "text");
+        descriptionInput.setAttribute("name", "description");
+        descriptionInput.setAttribute("value", dataR.description);
+        authorInput.setAttribute("readonly", "true");
+
+        var imageInput = document.createElement("input");
+        imageInput.setAttribute("type", "text");
+        imageInput.setAttribute("name", "imageUrl");
+        imageInput.setAttribute("value", dataR.imageUrl);
+        imageInput.setAttribute("readonly", "true");
+
+        let btn = document.createElement('input');
+        btn.setAttribute("type", "submit");
+        btn.setAttribute("value", "Read");
+
+        formElement.appendChild(titleInput);
+        formElement.appendChild(authorInput);
+        formElement.appendChild(descriptionInput);
+        formElement.appendChild(imageInput);
+        formElement.appendChild(btn);
+
+        bodyElement.appendChild(formElement);
+        titleInput.style.display  = 'none';
+        authorInput.style.display  = 'none';
+        descriptionInput.style.display  = 'none';
+        imageInput.style.display  = 'none';
+        //document.getElementById(formId).style.display = "none";
+
         cardElement.className = "storyCard";
         imageContainer.className = "image-container";
         infoContainer.className = "info-container"
@@ -244,22 +276,17 @@ function addToResults(dataR) {
         headingElement.className = "heading";
         authorElement.className = "author";
         paragraphElement.className = "paragraph";
-        btnElement.className = "btn";
-
         imageElement.src=dataR.imageUrl;
-        btnElement.setAttribute("href","#");
         imageElement.setAttribute("alt","Image of story");
-
         headingElement.innerText=dataR.title;
         authorElement.innerText="By: "+dataR.author;
         paragraphElement.innerText="About: "+dataR.description;
-        btnElement.innerText="Read";
 
         bodyElement.appendChild(cardElement);
         cardElement.append(imageContainer,infoContainer);
 
         imageContainer.appendChild(imageElement);
-        infoContainer.append(headingElement,authorElement,paragraphElement,btnElement);
+        infoContainer.append(headingElement,authorElement,paragraphElement,formElement);
 
     }
 }

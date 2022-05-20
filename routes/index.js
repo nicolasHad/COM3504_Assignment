@@ -38,6 +38,10 @@ router
     })
     .post('/getAllStoryData',story.getActiveStoryData)
 
+router
+    .post('/individual_storyPage', function (req,res,next) {
+        res.render('individual_storyPage', {title: req.body.title, author:req.body.author, description:req.body.description, imageUrl:req.body.imageUrl});
+    })
 /* GET home page.
 router
     .get('/insert', function(req, res, next) {
