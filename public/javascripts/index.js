@@ -89,6 +89,7 @@ function selectItem(event){
     let story = document.getElementById('story_title').value;
     let KGannot =  new KGAnnotation(roomId,story,row.id,row.name,row.rc,row.qc);
     storeCachedAnnotation(KGannot);
+    document.getElementById('widget').style.display='none';
 
     let tbody = document.getElementById('tbody_KG');
 
