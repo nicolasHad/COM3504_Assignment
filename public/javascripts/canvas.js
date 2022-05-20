@@ -23,9 +23,6 @@ async function initCanvas(sckt, imageUrl) {
 
     let penSelection = document.getElementById('annotate').checked;
 
-
-
-
     // event on the canvas when the mouse is on it
     canvas.on('mousemove mousedown mouseup mouseout', async function (e) {
         penSelection = document.getElementById('annotate').checked;
@@ -38,14 +35,12 @@ async function initCanvas(sckt, imageUrl) {
             flag = true;
             socket.emit('chat',roomNo, name, ' has started drawing.');
         }
-        if (e.type === 'mouseup' || e.type === 'mouseout') {
+        if (e.type === 'mouseup' || (e.type === 'mouseout' && flag)) {
             flag = false;
             if (e.type==='mouseup')
                 socket.emit('chat',roomNo, name, ' has finished drawing.');
-                socket.emit('chat',roomNo, name, penSelection);
                 if (penSelection)
                     showKGForm();
-
         }
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
@@ -69,6 +64,9 @@ async function initCanvas(sckt, imageUrl) {
         ctx.drawImage(img, 0, 0, c_width, c_height);
         socket.emit('clear canvas',roomNo,name);
         socket.emit('chat',roomNo, name, ' has cleared the canvas.');
+        let roomId=document.getElementById('roomNo').value;
+        let story=document.getElementById('story_title').value;
+        deleteCachedAnnotationData(roomId,story);
     });
 
     socket.on('clear canvas', function (roomNo,name) {
@@ -83,12 +81,12 @@ async function initCanvas(sckt, imageUrl) {
     // and then you call
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
         let ctx0 = canvas[0].getContext('2d');
+        let story=document.getElementById('story_title').value;
         drawOnCanvas(ctx0, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness);
-        //DOESN'T WORK.DON'T KNOW WHY.
-        //Here is where we should cache the incoming annotations as well.
+        // Store the received annotations to indexedDB as well.
+        const annot_object = new DrawnAnnotation(room, story, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness); //Create the annotation object as soon as it's created.Cache it using indexedDB(storecachedData)
+        storeCachedAnnotation(annot_object); //Cache the annotation in indexedDB
     });
-
-
 
 
     // this is called when the src of the image is loaded
@@ -133,8 +131,49 @@ async function initCanvas(sckt, imageUrl) {
             if (ann.currX != null) {
                 drawOnCanvas(ctx, ann.canvas_width,ann.canvas_height, ann.prevX,ann.prevY,ann.currX,ann.currY,'red',4);
             }
-            else{
+            else if(ann.body !=null){
                 writeOnHistory(ann.body);
+            }
+            else{
+
+                let KG_table = document.getElementById('KGResults_table');
+                let tbody = document.getElementById('tbody_KG');
+
+                // Creating and adding data to first row of the table
+                let row = document.createElement('tr');
+                let heading_1 = document.createElement('td');
+                heading_1.innerText = ann.resId;
+                let heading_2 = document.createElement('td');
+                heading_2.innerText = ann.resName;
+                let heading_3 = document.createElement('td');
+                heading_3.innerText = ann.resDescription;
+                let heading_4 = document.createElement('td');
+                heading_4.innerText = ann.resUrl;
+
+                row.appendChild(heading_1);
+                row.appendChild(heading_2);
+                row.appendChild(heading_3);
+                row.appendChild(heading_4);
+                tbody.appendChild(row);
+
+                /*
+                let KGresults = document.getElementById('KGResults');
+                let cardElement = document.createElement('div');
+                let infoContainer = document.createElement('div');
+                let resId = document.createElement('h4');
+                let resName = document.createElement('h5');
+                let resDescription = document.createElement('p');
+                let resUrl = document.createElement('p');
+
+                resId.innerText = ann.resId;
+                resName.innerText = ann.resName;
+                resDescription.innerText = ann.resDescription;
+                resUrl.innerText = ann.resUrl;
+
+                KGresults.appendChild(cardElement);
+                cardElement.append(infoContainer);
+                infoContainer.append(resId,resName,resDescription,resUrl);
+              */
             }
         }
     },100));

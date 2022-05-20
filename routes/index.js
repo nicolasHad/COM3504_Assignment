@@ -19,7 +19,7 @@ router.get('/visitedRooms', function(req, res, next) {
     res.render('visitedRooms');
 });
 
-/* GET newStory page and POST to the function which addes a new story to the databse in controllers/stories.js. */
+/* GET newStory page and POST to the function which addes a new story to the database in controllers/stories.js. */
 router.get('/createStory', function(req, res, next) {
   res.render('newStory', { title: 'Create a story' });
 })
@@ -37,6 +37,11 @@ router
         res.render('stories');
     })
     .post('/getAllStoryData',story.getActiveStoryData)
+
+router
+    .post('/individual_storyPage', function (req,res,next) {
+        res.render('individual_storyPage', {title: req.body.title, author:req.body.author, description:req.body.description, imageUrl:req.body.imageUrl});
+    })
 
 /* GET home page.
 router

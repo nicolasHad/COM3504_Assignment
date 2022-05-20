@@ -63,9 +63,10 @@ async function initDatabase(){
                     });
 
                     let annotationsDB=upgradeDB.createObjectStore(ANNOTATIONS_STORE_NAME, {
-                       keyPath: 'id',
-                       autoIncrement: true
+                       keyPath: ['id','room','story'],
+                       autoIncrement: false
                     });
+
 
                     // Create the indexes of the stories store, in case we want to search using author or title.
                     storiesDB.createIndex('author', 'author', {unique:false,multiEntry:true});
@@ -73,7 +74,6 @@ async function initDatabase(){
 
                     // An annotation belongs to a story, so create an index so we can search annotations depending on which story they belong.
                     annotationsDB.createIndex('room', ['room','story'], {unique:false});
-
                 }
             },
             // When it's not possible to connect.
@@ -111,7 +111,7 @@ async function storeCachedStory(author,title,description,imageUrl){
                 imageUrl:imageUrl
             });
 
-                await tx.complete;
+            await tx.complete;
             console.log('Added item to the store.', JSON.stringify(author+','+title+','+description+','+imageUrl));
         }
         catch (error) {
@@ -124,6 +124,7 @@ window.storeCachedStory = storeCachedStory;
 
 async function storeCachedAnnotation(object){
     console.log('Inserting: '+JSON.stringify(object));
+    let id = Math.random();
     if(!db)
         await initDatabase();
     if(db) {
@@ -131,8 +132,9 @@ async function storeCachedAnnotation(object){
             var store_n = ANNOTATIONS_STORE_NAME;
             let tx = await db.transaction(store_n, 'readwrite');
             let store = await tx.objectStore(store_n);
-            if(object.currY == null) {
+            if(object.body != null) {
                 await store.put({
+                    id: id,
                     room: object.room,
                     story: object.story,
                     body: object.body
@@ -140,8 +142,22 @@ async function storeCachedAnnotation(object){
                 await tx.complete;
                 console.log('Added item to the store.', JSON.stringify(object));
             }
+            else if (object.resId != null){
+                await store.put({
+                    id: id,
+                    room: object.room,
+                    story: object.story,
+                    resId: object.resId,
+                    resName: object.resName,
+                    resDescription: object.resDescription,
+                    resUrl: object.resUrl
+                });
+                await tx.complete;
+                console.log('Added item to the store.', JSON.stringify(object));
+            }
             else{
                 await store.put({
+                    id: id,
                     room: object.room,
                     story: object.story,
                     canvas_width : object.canvas_width,
@@ -154,13 +170,13 @@ async function storeCachedAnnotation(object){
                     thickness : object.thickness
                 });
                 await tx.complete;
-                console.log('Added item to the store.', JSON.stringify(object));
+                console.log('Added item to the store.', JSON.stringify(object), 'with ID:'+id.toString());
             }
         }
         catch (error) {
             //localStorage.setItem(JSON.stringify(object));
             console.log(error);
-        };
+        }
     }
 }
 window.storeCachedAnnotation = storeCachedAnnotation;
@@ -234,7 +250,6 @@ async function getCachedAnnotationData(room,story){
         await initDatabase();
     if (db) {
         try {
-            //console.log('fetching story. Title:' + title + '.Author:' + author);
             var store_annotations = ANNOTATIONS_STORE_NAME;
 
             //Define different transactions,stores,indexes and readingLists for both stories and annotations.
@@ -263,6 +278,38 @@ async function getCachedAnnotationData(room,story){
 }
 window.getCachedAnnotationData = getCachedAnnotationData;
 
+
+async function deleteCachedAnnotationData(room,story){
+    let to_be_deleted =  await getCachedAnnotationData(room,story)
+        .then((response) => {
+            return response;
+        })
+    if (!db)
+        await initDatabase();
+    if (db) {
+        try {
+            var store_n = ANNOTATIONS_STORE_NAME;
+            let tx = await db.transaction(store_n, 'readwrite');
+            let store = await tx.objectStore(store_n);
+            //let index_annotations = await store.index('room');
+
+            for(let ann of to_be_deleted) {
+                let id = ann.id
+                store.delete([id,room,story]);
+            }
+            await tx.complete;
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    else {
+        console.log('COULDNT DELETE THE ANNOTATIONS FROM IDB');
+        alert('COULDNT DELETE THE ANNOTATIONS FROM IDB');
+    }
+}
+window.deleteCachedAnnotationData = deleteCachedAnnotationData;
 
 /**
  * Given the returned story data from mongoDB, it returns the value of

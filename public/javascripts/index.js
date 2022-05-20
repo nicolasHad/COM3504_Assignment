@@ -3,6 +3,7 @@ let roomNo = null;
 
 let chat = io.connect('/chat');
 
+
 // Initialise service url and google api key for KG.
 const service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
 const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
@@ -84,12 +85,31 @@ function widgetInit(){
  */
 function selectItem(event){
     let row= event.row;
-    // document.getElementById('resultImage').src= row.json.image.url;
-    document.getElementById('resultId').innerText= 'id: '+row.id;
-    document.getElementById('resultName').innerText= row.name;
-    document.getElementById('resultDescription').innerText= row.rc;
-    document.getElementById("resultUrl").href= row.qc;
-    document.getElementById('resultPanel').style.display= 'block';
+    let roomId=document.getElementById('roomNo').value;
+    let story = document.getElementById('story_title').value;
+    let KGannot =  new KGAnnotation(roomId,story,row.id,row.name,row.rc,row.qc);
+    storeCachedAnnotation(KGannot);
+
+    let tbody = document.getElementById('tbody_KG');
+
+    // Creating and adding data to first row of the table
+    let table_row = document.createElement('tr');
+    let heading_1 = document.createElement('td');
+    heading_1.innerText = row.id;
+    let heading_2 = document.createElement('td');
+    heading_2.innerText = row.name;
+    let heading_3 = document.createElement('td');
+    heading_3.innerText = row.rc;
+    let heading_4 = document.createElement('td');
+    heading_4.innerText = row.qc;
+
+    table_row.appendChild(heading_1);
+    table_row.appendChild(heading_2);
+    table_row.appendChild(heading_3);
+    table_row.appendChild(heading_4);
+    tbody.appendChild(table_row);
+
+
 }
 
 /**
@@ -107,16 +127,16 @@ function queryMainEntity(id, type){
     };
     $.getJSON(service_url + '?callback=?', params, function(response) {
         $.each(response.itemListElement, function (i, element) {
-
-            $('<div>', {text: element['result']['name']}).appendTo(document.body);
+            $('<div>', {text: element['result']['name']}).appendTo(document.body)
         });
     });
+
 }
 
 function showKGForm(){
     document.getElementById('typeForm').style.display = 'block';
-    console.log('hello');
 }
+
 
 
 /**
@@ -146,24 +166,6 @@ function retrieveAllStoriesData(roomList, forceReload){
 }
 */
 
-function listAllVisitedRooms(){
-    var roomList=JSON.parse(localStorage.getItem('roomList'));
-    for (let index of roomList) {
-        const row = document.createElement('div');
-        // appending a new row
-        document.getElementById('roomhistory').appendChild(row);
-        // formatting the row by applying css classes
-        row.classList.add('card');
-        row.classList.add('my_card');
-        row.classList.add('bg-faded');
-        row.innerHTML = "<div class='card-block'>" +
-            "<div class='row'>" +
-            "<div class='col-sm'>" + index + "</div>" +
-            "<div class='col-sm'></div></div></div>";
-    }
-
-}
-
 /**
  * given one story, it queries the mongoDB to get the latest
  * the story object
@@ -189,6 +191,7 @@ async function loadStoryData(title,forceReload){
             success: function(dataR){
                 //addToResults(dataR);
                 //handleResponse(dataR);
+                console.log('DATA FETCHED',dataR);
                 if(document.getElementById('offline_div')!=null)
                     document.getElementById('offline_div').style.display='none';
             },
@@ -208,25 +211,8 @@ async function loadStoryData(title,forceReload){
         document.getElementById('story_list').style.display='none';
 }
 
-
 function addToResults(dataR) {
     if (document.getElementById('results') != null) {
-       /* const row = document.createElement('div');
-        // appending a new row
-        document.getElementById('results').appendChild(row);
-        // formatting the row by applying css classes
-        row.classList.add('card');
-        row.classList.add('my_card');
-        row.classList.add('bg-faded');
-        // the following is far from ideal. we should really create divs using javascript
-        // rather than assigning innerHTML
-        row.innerHTML = "<div class='card-block'>" +
-            "<div class='row'>" +
-            "<div class='col-sm'>" + dataR.author + "</div>" +
-            "<div class='col-sm'>" + dataR.title + "</div>" +
-            "<div class='col-sm'>" + dataR.description + "</div>" +
-            "<div class='col-sm'></div></div></div>";*/
-
         let bodyElement=document.getElementById('results');
         let cardElement = document.createElement('div');
         let imageContainer = document.createElement('div');
@@ -237,6 +223,54 @@ function addToResults(dataR) {
         let paragraphElement = document.createElement('p');
         let btnElement = document.createElement('a');
 
+        let formId = "form"+ Math.random().toString();
+        let formElement = document.createElement('form');
+        formElement.setAttribute("id", formId);
+        formElement.setAttribute("method", "post");
+        formElement.setAttribute("action", "/individual_storyPage");
+        //formElement.setAttribute("onsubmit","/individual_storyPage");
+        var titleInput = document.createElement("input");
+        titleInput.setAttribute("type", "text");
+        titleInput.setAttribute("name", "title");
+        titleInput.setAttribute("value", dataR.title);
+        titleInput.setAttribute("readonly", "true");
+
+        var authorInput = document.createElement("input");
+        authorInput.setAttribute("type", "text");
+        authorInput.setAttribute("name", "author");
+        authorInput.setAttribute("value", dataR.author);
+        authorInput.setAttribute("readonly", "true");
+
+        var descriptionInput = document.createElement("input");
+        descriptionInput.setAttribute("type", "text");
+        descriptionInput.setAttribute("name", "description");
+        descriptionInput.setAttribute("value", dataR.description);
+        authorInput.setAttribute("readonly", "true");
+
+        var imageInput = document.createElement("input");
+        imageInput.setAttribute("type", "text");
+        imageInput.setAttribute("name", "imageUrl");
+        imageInput.setAttribute("value", dataR.imageUrl);
+        imageInput.setAttribute("readonly", "true");
+
+        let btn = document.createElement('input');
+        btn.setAttribute("type", "submit");
+        btn.setAttribute("value", "Read");
+
+        formElement.appendChild(titleInput);
+        formElement.appendChild(authorInput);
+        formElement.appendChild(descriptionInput);
+        formElement.appendChild(imageInput);
+        formElement.appendChild(btn);
+
+        bodyElement.appendChild(formElement);
+        titleInput.style.display  = 'none';
+        authorInput.style.display  = 'none';
+        descriptionInput.style.display  = 'none';
+        imageInput.style.display  = 'none';
+        //document.getElementById(formId).style.display = "none";
+
+
         cardElement.className = "storyCard";
         imageContainer.className = "image-container";
         infoContainer.className = "info-container"
@@ -245,22 +279,17 @@ function addToResults(dataR) {
         authorElement.className = "author";
         paragraphElement.className = "paragraph";
         btnElement.className = "btn";
-
         imageElement.src=dataR.imageUrl;
-        btnElement.setAttribute("href","#");
         imageElement.setAttribute("alt","Image of story");
-
         headingElement.innerText=dataR.title;
         authorElement.innerText="By: "+dataR.author;
         paragraphElement.innerText="About: "+dataR.description;
-        btnElement.innerText="Read";
 
         bodyElement.appendChild(cardElement);
         cardElement.append(imageContainer,infoContainer);
 
         imageContainer.appendChild(imageElement);
-        infoContainer.append(headingElement,authorElement,paragraphElement,btnElement);
-
+        infoContainer.append(headingElement,authorElement,paragraphElement,formElement);
     }
 }
 
@@ -347,7 +376,7 @@ async function connectToRoom() {
     hideLoginInterface(roomNo, name);
 
     //set story details in view.
-    row=document.getElementById('story_desc');
+    let row=document.getElementById('story_desc');
     row.innerHTML =
         "<p>  <b>Author:</b>"+ JSON.parse(storyData).author+"</p>"+
         "<p>  <b>Title:</b>"+ JSON.parse(storyData).title+"</p>"+
@@ -462,3 +491,13 @@ class DrawnAnnotation{
     }
 }
 
+class KGAnnotation{
+    constructor(room, story, resId, resName, resDescription, resUrl) {
+        this.room=room;
+        this.story=story;
+        this.resId = resId;
+        this.resName = resName;
+        this.resDescription = resDescription;
+        this.resUrl = resUrl;
+    }
+}
